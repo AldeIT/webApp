@@ -1,0 +1,68 @@
+{% extends "template.html" %}
+{% block title%}Home{% endblock %}
+{% block pagecontent %}
+<h1>Storico</h1>
+<br>
+<form class="" action="" method="POST">
+  <div class="input-group mb-3">
+  <select name="scelta" class="form-select" id="inputGroupSelect01">
+    <option selected>Seleziona</option>
+    <option>CF</option>
+    <option>Targa</option>
+  </select>
+</div>
+
+<label for="ricerca">Potenza (CV)</label><br>
+<input type="text" name="ricerca" value=""><br>
+
+  <input type="submit" name="sub" value="AGGIUNGI">
+</form>
+<br>
+{% if controllo==0%}
+<h2>Mezzi</h2>
+{% for item in listamezzi %}
+<p><b>Veicolo:</b></p>
+<p>Targa: {{item.targa}}</p>
+<p>Marca: {{item.marca}}</p>
+<p>Modello: {{item.modello}}</p>
+<p>Cilindrata: {{item.cilindrata}}</p>
+<p>Potenza: {{item.potenza}}</p>
+<p>Proprietario: {{item.cfcliente}}</p>
+<br>
+{% endfor %}
+<br><br>
+<h2>Clienti</h2>
+{% for item in listaclienti %}
+<p><b>Cliente:</b></p>
+<p>Codice Fiscale: {{item.cf}}</p>
+<p>Nome: {{item.nome}}</p>
+<p>Cognome: {{item.cognome}}</p>
+<p>Numero di telefono: {{item.ntelefono}}</p>
+<p>Email: {{item.email}}</p>
+<br>
+{% endfor %}
+{%elif controllo==1%}
+{% for item in listamacchine %}
+<p><b>Veicolo:</b></p>
+<p>Targa: {{item.targa}}</p>
+<p>Marca: {{item.marca}}</p>
+<p>Modello: {{item.modello}}</p>
+<p>Cilindrata: {{item.cilindrata}}</p>
+<p>Potenza: {{item.potenza}}</p>
+<p>Proprietario: {{item.cfcliente}}</p>
+<br>
+{% endfor %}
+{%elif controllo==2%}
+{% for item in listaproprietari %}
+<p><b>Cliente:</b></p>
+<p>Codice Fiscale: {{item.cf}}</p>
+<p>Nome: {{item.nome}}</p>
+<p>Cognome: {{item.cognome}}</p>
+<p>Numero di telefono: {{item.ntelefono}}</p>
+<p>Email: {{item.email}}</p>
+<br>
+{% endfor %}
+{%endif%}
+<br><br>
+<p>(da completare)</p>
+{%endblock %}
