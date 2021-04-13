@@ -1,0 +1,61 @@
+{% extends "template.html" %}
+{% block title %}Gestionale{% endblock %}
+{%  block pagecontent %}
+
+<h1>Gestionale</h1>
+
+<form class="" action="" method="POST">
+
+  <div class="input-group mb-3">
+  <label class="input-group-text" for="inputGroupSelect01"></label>
+  <select name="scelta" class="form-select" id="inputGroupSelect01">
+    <option selected>Seleziona il Gruppo</option>
+
+    <option>Riparazioni</option>
+    <option>Mezzi</option>
+    <option>Clienti</option>
+
+  </select>
+</div>
+  <input type="submit" name="sub" value="AGGIUNGI">
+</form>
+
+{%if controllo==0%}
+{%for item in listariparazioni%}
+<form action="" method="post">
+  <div class="input-group mb-3">
+  <select name={{item._id ~ "stato"}} class="form-select" id="inputGroupSelect01">
+    <option selected>{{item.stato}}</option>
+    <option>False</option>
+    <option>True</option>
+  </select>
+</div>
+  <input type="text" value="{{item.descrizione}}" name={{item._id ~ "descrizione"}}>
+  <input type="text" value="{{item.prezzo}}" name={{item._id ~ "prezzo"}}>
+  <input type="submit" name={{item._id}} value="Modifica">
+</form>
+{%endfor%}
+{%elif controllo==1%}
+{%for item in listamezzi%}
+<form action="" method="post">
+  <input type="text" value={{item.marca}} name={{item.targa ~ "marca"}}>
+  <input type="text" value={{item.modello}} name={{item.targa ~ "modello"}}>
+  <input type="text" value={{item.cilindrata}} name={{item.targa ~ "cilindrata"}}>
+  <input type="text" value={{item.potenza}} name={{item.targa ~ "potenza"}}>
+  <input type="submit" name={{item.targa}} value="Modifica">
+</form>
+{%endfor%}
+{%elif controllo==2%}
+{%for item in listaclienti%}
+<form action="" method="post">
+  <input type="text" value={{item.nome}} name={{item.cf ~ "nome"}}>
+  <input type="text" value={{item.cognome}} name={{item.cf ~ "cognome"}}>
+  <input type="text" value={{item.ntelefono}} name={{item.cf ~ "ntelefono"}}>
+  <input type="text" value={{item.email}} name={{item.cf ~ "email"}}>
+  <input type="submit" name={{item.cf}} value="Modifica">
+</form>
+{%endfor%}
+{%endif%}
+
+<p>{{frase}}</p>
+{% endblock %}

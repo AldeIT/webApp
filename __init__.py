@@ -1,5 +1,6 @@
 from flask import Flask, redirect, url_for, render_template, request, session, flash
-from datetime import timedelta
+from datetime import timedelta, datetime
+import pytz
 from flask_sqlalchemy import SQLAlchemy
 import time
 
@@ -75,10 +76,25 @@ def home():
     else:
         return render_template("index.html", frase="")
 
-@app.route("/riparazioni")
+@app.route("/riparazioni", methods=["GET", "POST"])
 def riparazioni():
     if "pass" in session:
-        return render_template("riparazioni.html")
+        tz = pytz.timezone("Europe/Rome")
+        riparazioniincorso = Clienti.query.join(Mezzi, Clienti.cf==Mezzi.cfcliente).join(Riparazioni, Mezzi.targa==Riparazioni.targamezzo).add_columns(Riparazioni.inizio, Riparazioni.descrizione, Riparazioni.prezzo, Riparazioni._id, Mezzi.marca, Mezzi.modello, Clienti.nome, Clienti.cognome).filter_by(fine="in corso...").all()
+        if request.method == "POST":
+            ids = Riparazioni.query.filter_by(fine="in corso...").all()
+            for i in ids:
+                if str(i._id) in request.form:
+                    riparazione = Riparazioni.query.filter_by(_id=i._id).first()
+                    riparazione.stato=True
+                    riparazione.fine=datetime.now(tz)
+                    db.session.commit()
+                    break
+            riparazioniincorso = Clienti.query.join(Mezzi, Clienti.cf==Mezzi.cfcliente).join(Riparazioni, Mezzi.targa==Riparazioni.targamezzo).add_columns(Riparazioni.inizio, Riparazioni.descrizione, Riparazioni.prezzo, Riparazioni._id, Mezzi.marca, Mezzi.modello, Clienti.nome, Clienti.cognome).filter_by(fine="in corso...").all()
+            return render_template("riparazioni.html", listariparazioniincorso=riparazioniincorso)
+        else:
+
+            return render_template("riparazioni.html", listariparazioniincorso=riparazioniincorso)
     else:
         return redirect(url_for("home"))
 
@@ -88,25 +104,100 @@ def storico():
         if request.method=="POST":
             scelta = request.form["scelta"]
             if scelta=="CF":
-                cf = request.form["ricerca"]
-                lista=Mezzi.query.filter_by(cfcliente=cf).all()
-                return render_template("storico.html", controllo=1, listamacchine=lista)
+                cfin = request.form["ricerca"]
+                lista=Mezzi.query.filter_by(cfcliente=cfin).all()
+                lista2 = Riparazioni.query.join(Mezzi, Riparazioni.targamezzo==Mezzi.targa).join(Clienti, Mezzi.cfcliente==Clienti.cf).filter_by(cf=cfin).all()
+                return render_template("storico.html", controllo=1, listariparazioni=lista2, listamacchine=lista)
             elif scelta=="Targa":
                 targain=request.form["ricerca"]
                 lista=Clienti.query.join(Mezzi, Clienti.cf==Mezzi.cfcliente).filter_by(targa=targain).all()
-                return render_template("storico.html", controllo=2, listaproprietari=lista)
+                lista2 = Riparazioni.query.filter_by(targamezzo=targain).all()
+                return render_template("storico.html", controllo=2, listariparazioni=lista2, listaproprietari=lista)
         else:
             lista1 = Clienti.query.all()
             lista2 = Mezzi.query.all()
-            return render_template("storico.html", controllo=0, listamezzi=lista2, listaclienti=lista1)
+            lista3 = Riparazioni.query.all()
+            return render_template("storico.html", controllo=0, listariparazioni=lista3, listamezzi=lista2, listaclienti=lista1)
     else:
         return redirect(url_for("home"))
 
+@app.route("/gestionale", methods=["GET", "POST"])
+def gestionale():
+    if "pass" in session:
+        if request.method=="POST":
+            if "scelta" in request.form:
+                scelta = request.form["scelta"]
+                if scelta=="Riparazioni":
 
-@app.route("/aggiuntariparazioni")
+                    lista = Riparazioni.query.all()
+                    return render_template("gestionale.html", controllo=0, listariparazioni=lista)
+                elif scelta=="Mezzi":
+                    lista = Mezzi.query.all()
+                    return render_template("gestionale.html", controllo=1, listamezzi=lista)
+                elif scelta=="Clienti":
+                    lista = Clienti.query.all()
+                    return render_template("gestionale.html", controllo=2, listaclienti=lista)
+            ids = Riparazioni.query.all()
+            for i in ids:
+                if str(i._id) in request.form:
+                    riparazione = Riparazioni.query.filter_by(_id=i._id).first()
+                    var = str(i._id)
+                    if request.form[var + "stato"]=="False":
+                        riparazione.stato=False
+                    else:
+                        riparazione.stato=True
+                    riparazione.descrizione=request.form[var + "descrizione"]
+                    riparazione.prezzo=request.form[var + "prezzo"]
+                    db.session.commit()
+                    lista = Riparazioni.query.all()
+                    return render_template("gestionale.html", controllo=0, listariparazioni=lista)
+            targhe = Mezzi.query.all()
+            for i in targhe:
+                if str(i.targa) in request.form:
+                    mezzo = Mezzi.query.filter_by(targa=i.targa).first()
+                    mezzo.marca = request.form[i.targa + "marca"]
+                    mezzo.modello = request.form[i.targa + "modello"]
+                    mezzo.cilindrata = request.form[i.targa + "cilindrata"]
+                    mezzo.potenza = request.form[i.targa + "potenza"]
+                    db.session.commit()
+                    lista = Mezzi.query.all()
+                    return render_template("gestionale.html", controllo=1, listamezzi=lista)
+            cfs = Clienti.query.all()
+            for i in cfs:
+                if str(i.cf) in request.form:
+                    cliente = Clienti.query.filter_by(cf=i.cf).first()
+                    cliente.nome = request.form[i.cf + "nome"]
+                    cliente.cognome = request.form[i.cf + "cognome"]
+                    cliente.ntelefono = request.form[i.cf + "ntelefono"]
+                    cliente.email = request.form[i.cf + "email"]
+                    db.session.commit()
+                    lista = Clienti.query.all()
+                    return render_template("gestionale.html", controllo=2, listaclienti=lista)
+            return render_template("gestionale.html")
+
+        else:
+            return render_template("gestionale.html")
+    else:
+        return redirect(url_for("home"))
+
+@app.route("/aggiuntariparazioni", methods=["GET", "POST"])
 def aggiuntariparazioni():
     if "pass" in session:
-        return render_template("riparazioni.html")
+        tz = pytz.timezone("Europe/Rome")
+        listamezzi = Mezzi.query.all()
+        if request.method == "POST":
+            stato = False
+            inizio = datetime.now(tz)
+            fine = "in corso..."
+            prezzo = request.form["prezzo"]
+            descrizione = request.form["descrizione"]
+            targamezzo = request.form["targamezzo"]
+            riparazione = Riparazioni(stato, inizio, fine, prezzo, descrizione, targamezzo)
+            db.session.add(riparazione)
+            db.session.commit()
+            return render_template("addriparazioni.html", lista=listamezzi, frase="aggiunto")
+        else:
+            return render_template("addriparazioni.html", lista=listamezzi)
     else:
         return redirect(url_for("home"))
 

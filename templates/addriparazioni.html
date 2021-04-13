@@ -1,0 +1,28 @@
+{% extends "template.html" %}
+{% block title %}Aggiungi Riparazioni{% endblock %}
+{%  block pagecontent %}
+
+<h1>Aggiunta Riparazione</h1>
+
+<form class="" action="" method="POST">
+  <label for="descrizione">Descrizione</label><br>
+  <input type="text" name="descrizione" value=""><br>
+
+  <label for="prezzo">Prezzo</label><br>
+  <input type="text" name="prezzo" value=""><br>
+
+  <div class="input-group mb-3">
+  <label class="input-group-text" for="inputGroupSelect01">Targa</label>
+  <select name="targamezzo" class="form-select" id="inputGroupSelect01">
+    <option selected>Seleziona la targa</option>
+    {% for item in lista %}
+    <option>{{item.targa}}</option>
+    {% endfor %}
+  </select>
+</div>
+
+  <input type="submit" name="sub" value="AGGIUNGI">
+</form>
+
+<p>{{frase}}</p>
+{% endblock %}

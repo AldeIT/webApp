@@ -12,13 +12,24 @@
   </select>
 </div>
 
-<label for="ricerca">Potenza (CV)</label><br>
 <input type="text" name="ricerca" value=""><br>
 
   <input type="submit" name="sub" value="AGGIUNGI">
 </form>
 <br>
 {% if controllo==0%}
+<h2>Riparazioni</h2>
+{% for item in listariparazioni %}
+<p><b>Riparazione:</b></p>
+<p>Descrizione: {{item.descrizione}}</p>
+<p>Stato: {{item.stato}}</p>
+<p>Inizio: {{item.inizio}}</p>
+<p>Fine: {{item.fine}}</p>
+<p>Prezzo: {{item.prezzo}}</p>
+<p>Targa: {{item.targamezzo}}</p>
+<br>
+{% endfor %}
+<br><br>
 <h2>Mezzi</h2>
 {% for item in listamezzi %}
 <p><b>Veicolo:</b></p>
@@ -42,6 +53,16 @@
 <br>
 {% endfor %}
 {%elif controllo==1%}
+{% for item in listariparazioni %}
+<p><b>Riparazione:</b></p>
+<p>Descrizione: {{item.descrizione}}</p>
+<p>Stato: {{item.stato}}</p>
+<p>Inizio: {{item.inizio}}</p>
+<p>Fine: {{item.fine}}</p>
+<p>Prezzo: {{item.prezzo}}</p>
+<p>Targa: {{item.targamezzo}}</p>
+<br>
+{% endfor %}
 {% for item in listamacchine %}
 <p><b>Veicolo:</b></p>
 <p>Targa: {{item.targa}}</p>
@@ -53,8 +74,18 @@
 <br>
 {% endfor %}
 {%elif controllo==2%}
+{% for item in listariparazioni %}
+<p><b>Riparazione:</b></p>
+<p>Descrizione: {{item.descrizione}}</p>
+<p>Stato: {{item.stato}}</p>
+<p>Inizio: {{item.inizio}}</p>
+<p>Fine: {{item.fine}}</p>
+<p>Prezzo: {{item.prezzo}}</p>
+<p>Targa: {{item.targamezzo}}</p>
+<br>
+{% endfor %}
 {% for item in listaproprietari %}
-<p><b>Cliente:</b></p>
+<p><b>Proprietario:</b></p>
 <p>Codice Fiscale: {{item.cf}}</p>
 <p>Nome: {{item.nome}}</p>
 <p>Cognome: {{item.cognome}}</p>
