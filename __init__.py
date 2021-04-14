@@ -1,14 +1,25 @@
+#importazione dei pacchetti necessari
 from flask import Flask, redirect, url_for, render_template, request, session, flash
 from datetime import timedelta, datetime
 import pytz
 from flask_sqlalchemy import SQLAlchemy
 import time
-
+import smtplib, ssl
+from email.message import EmailMessage
+from flask_mail import Mail, Message as MailMessage
+#parametri di configurazione dell'app
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///db.sqlite3"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
-
+app.config['MAIL_SERVER']='smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = 'assistenza.mechsite@gmail.com'
+app.config['MAIL_PASSWORD'] = 'Dnstoro123'
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+mail = Mail(app)
+#Classe/Tabella DB CLienti(cf*, nome, cognome, ntelefono, email, password)
 class Clienti(db.Model):
     cf = db.Column("cf", db.String(16), primary_key=True)
     nome = db.Column("nome", db.String(30))
@@ -25,6 +36,7 @@ class Clienti(db.Model):
         self.email = email
         self.password = password
 
+#Classe/Tabella DB Mezzi(targa*, marca, modello, cilindrata, potenza, cfcliente->)
 class Mezzi(db.Model):
     targa = db.Column("targa", db.String(10), primary_key=True)
     marca = db.Column("marca", db.String(30))
@@ -42,6 +54,7 @@ class Mezzi(db.Model):
         self.potenza = potenza
         self.cfcliente = cfcliente
 
+#Classe/Tabella DB Riparazioni(id*, stato, inizio, fine, prezzo, descrizione, targamezzo->)
 class Riparazioni(db.Model):
     _id = db.Column("id", db.Integer, primary_key=True)
     stato = db.Column("stato", db.Boolean, default=False)
@@ -59,7 +72,13 @@ class Riparazioni(db.Model):
         self.descrizione = descrizione
         self.targamezzo = targamezzo
 
+def inviamail(ricevente):
+    msg = MailMessage('NoReply - Officina', sender='assistenza.mechsite@gmail.com', recipients=[ricevente.email])
+    msg.body = "Buongiorno, \n la riparazione sul mezzo: " + ricevente.marca + " " + ricevente.modello + ", a nome: " + ricevente.nome + " " + ricevente.cognome + "è terminata.\nPrezzo Finale: " + ricevente.prezzo + "\nSaluti, MechSite"
+    mail.send(msg)
+    return 1
 
+#Pagina di accesso Meccanico/Utenti(Da completare)
 @app.route("/", methods=["GET", "POST"])
 def home():
     password = "meccanico"
@@ -76,19 +95,23 @@ def home():
     else:
         return render_template("index.html", frase="")
 
+#Pagina Riparazioni in corso...
 @app.route("/riparazioni", methods=["GET", "POST"])
 def riparazioni():
     if "pass" in session:
         tz = pytz.timezone("Europe/Rome")
         riparazioniincorso = Clienti.query.join(Mezzi, Clienti.cf==Mezzi.cfcliente).join(Riparazioni, Mezzi.targa==Riparazioni.targamezzo).add_columns(Riparazioni.inizio, Riparazioni.descrizione, Riparazioni.prezzo, Riparazioni._id, Mezzi.marca, Mezzi.modello, Clienti.nome, Clienti.cognome).filter_by(fine="in corso...").all()
         if request.method == "POST":
+            #Cerca le riparazioni in corso per poi printarle nella pagina
             ids = Riparazioni.query.filter_by(fine="in corso...").all()
             for i in ids:
                 if str(i._id) in request.form:
                     riparazione = Riparazioni.query.filter_by(_id=i._id).first()
+                    ricevente = Clienti.query.join(Mezzi, Clienti.cf==Mezzi.cfcliente).join(Riparazioni, Mezzi.targa==Riparazioni.targamezzo).add_columns( Riparazioni._id, Mezzi.marca, Mezzi.modello, Clienti.email, Clienti.nome, Clienti.cognome, Riparazioni.prezzo).filter_by(_id=i._id).first()
                     riparazione.stato=True
                     riparazione.fine=datetime.now(tz)
                     db.session.commit()
+                    #n = inviamail(ricevente)
                     break
             riparazioniincorso = Clienti.query.join(Mezzi, Clienti.cf==Mezzi.cfcliente).join(Riparazioni, Mezzi.targa==Riparazioni.targamezzo).add_columns(Riparazioni.inizio, Riparazioni.descrizione, Riparazioni.prezzo, Riparazioni._id, Mezzi.marca, Mezzi.modello, Clienti.nome, Clienti.cognome).filter_by(fine="in corso...").all()
             return render_template("riparazioni.html", listariparazioniincorso=riparazioniincorso)
@@ -98,22 +121,28 @@ def riparazioni():
     else:
         return redirect(url_for("home"))
 
+#Pagina Storico Database
 @app.route("/storico", methods=["GET", "POST"])
 def storico():
     if "pass" in session:
         if request.method=="POST":
             scelta = request.form["scelta"]
             if scelta=="CF":
+                #ricerca Mezzi e Riparazioni associate al CF inserito
                 cfin = request.form["ricerca"]
                 lista=Mezzi.query.filter_by(cfcliente=cfin).all()
                 lista2 = Riparazioni.query.join(Mezzi, Riparazioni.targamezzo==Mezzi.targa).join(Clienti, Mezzi.cfcliente==Clienti.cf).filter_by(cf=cfin).all()
                 return render_template("storico.html", controllo=1, listariparazioni=lista2, listamacchine=lista)
             elif scelta=="Targa":
+                #ricerca Riparazioni e Proprietario associati alla Targa inserita
                 targain=request.form["ricerca"]
                 lista=Clienti.query.join(Mezzi, Clienti.cf==Mezzi.cfcliente).filter_by(targa=targain).all()
                 lista2 = Riparazioni.query.filter_by(targamezzo=targain).all()
                 return render_template("storico.html", controllo=2, listariparazioni=lista2, listaproprietari=lista)
+            else:
+                return render_template("storico.html", frase="record non trovati")
         else:
+            #se non viene selezionata un'opzione vengono printati tutte le riparazione, clienti, mezzi
             lista1 = Clienti.query.all()
             lista2 = Mezzi.query.all()
             lista3 = Riparazioni.query.all()
@@ -121,14 +150,16 @@ def storico():
     else:
         return redirect(url_for("home"))
 
+#Pagina Gestionale del Database
 @app.route("/gestionale", methods=["GET", "POST"])
 def gestionale():
     if "pass" in session:
+        tz = pytz.timezone("Europe/Rome")
         if request.method=="POST":
             if "scelta" in request.form:
                 scelta = request.form["scelta"]
+                #In base alla scelta viene printato una tabella differente
                 if scelta=="Riparazioni":
-
                     lista = Riparazioni.query.all()
                     return render_template("gestionale.html", controllo=0, listariparazioni=lista)
                 elif scelta=="Mezzi":
@@ -139,20 +170,31 @@ def gestionale():
                     return render_template("gestionale.html", controllo=2, listaclienti=lista)
             ids = Riparazioni.query.all()
             for i in ids:
+                strdelete = str(i._id) + "delete"
                 if str(i._id) in request.form:
+                    #Codice per la modifica degli attributi delle Riparazioni
                     riparazione = Riparazioni.query.filter_by(_id=i._id).first()
                     var = str(i._id)
-                    if request.form[var + "stato"]=="False":
+                    if request.form[var + "stato"]=="In corso":
                         riparazione.stato=False
-                    else:
+                        riparazione.fine = "in corso..."
+                    elif request.form[var + "stato"]=="Terminato":
                         riparazione.stato=True
+                        riparazione.fine = datetime.now(tz)
                     riparazione.descrizione=request.form[var + "descrizione"]
                     riparazione.prezzo=request.form[var + "prezzo"]
                     db.session.commit()
                     lista = Riparazioni.query.all()
                     return render_template("gestionale.html", controllo=0, listariparazioni=lista)
+                elif strdelete in request.form:
+                    Riparazioni.query.filter_by(_id=i._id).delete()
+                    db.session.commit()
+                    lista = Riparazioni.query.all()
+                    return render_template("gestionale.html", controllo=0, listariparazioni=lista)
+
             targhe = Mezzi.query.all()
             for i in targhe:
+                strdelete = str(i.targa) + "delete"
                 if str(i.targa) in request.form:
                     mezzo = Mezzi.query.filter_by(targa=i.targa).first()
                     mezzo.marca = request.form[i.targa + "marca"]
@@ -162,14 +204,32 @@ def gestionale():
                     db.session.commit()
                     lista = Mezzi.query.all()
                     return render_template("gestionale.html", controllo=1, listamezzi=lista)
+                elif strdelete in request.form:
+                    Riparazioni.query.filter_by(targamezzo=i.targa).delete()
+                    Mezzi.query.filter_by(targa=i.targa).delete()
+                    db.session.commit()
+                    lista = Mezzi.query.all()
+                    return render_template("gestionale.html", controllo=1, listamezzi=lista)
+
+
             cfs = Clienti.query.all()
             for i in cfs:
+                strdelete = str(i.cf) + "delete"
                 if str(i.cf) in request.form:
                     cliente = Clienti.query.filter_by(cf=i.cf).first()
                     cliente.nome = request.form[i.cf + "nome"]
                     cliente.cognome = request.form[i.cf + "cognome"]
                     cliente.ntelefono = request.form[i.cf + "ntelefono"]
                     cliente.email = request.form[i.cf + "email"]
+                    db.session.commit()
+                    lista = Clienti.query.all()
+                    return render_template("gestionale.html", controllo=2, listaclienti=lista)
+                elif strdelete in request.form:
+                    targhe = Mezzi.query.filter_by(cfcliente=i.cf).all()
+                    for x in targhe:
+                        Riparazioni.query.filter_by(targamezzo=x.targa).delete()
+                    Mezzi.query.filter_by(cfcliente=i.cf).delete()
+                    Clienti.query.filter_by(cf=i.cf).delete()
                     db.session.commit()
                     lista = Clienti.query.all()
                     return render_template("gestionale.html", controllo=2, listaclienti=lista)
@@ -180,6 +240,7 @@ def gestionale():
     else:
         return redirect(url_for("home"))
 
+#Pagina per l'aggiunta riparazioni
 @app.route("/aggiuntariparazioni", methods=["GET", "POST"])
 def aggiuntariparazioni():
     if "pass" in session:
@@ -201,7 +262,7 @@ def aggiuntariparazioni():
     else:
         return redirect(url_for("home"))
 
-
+#Pagina per l'aggiunta clienti
 @app.route("/aggiuntaclienti", methods=["GET", "POST"])
 def aggiuntaclienti():
     if "pass" in session:
@@ -225,7 +286,7 @@ def aggiuntaclienti():
     else:
         return redirect(url_for("home"))
 
-
+#Pagina per l'aggiunta mezzi
 @app.route("/aggiuntamezzi", methods=["GET", "POST"])
 def aggiuntamezzi():
     if "pass" in session:
@@ -252,5 +313,6 @@ def aggiuntamezzi():
         return redirect(url_for("home"))
 
 if __name__ == "__main__":
+    #Creazione tabelle Database e Avvio dell'applicazione
     db.create_all()
     app.run(debug = True)

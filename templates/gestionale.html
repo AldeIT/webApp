@@ -1,61 +1,79 @@
 {% extends "template.html" %}
 {% block title %}Gestionale{% endblock %}
 {%  block pagecontent %}
-
+<center>
 <h1>Gestionale</h1>
 
 <form class="" action="" method="POST">
 
-  <div class="input-group mb-3">
-  <label class="input-group-text" for="inputGroupSelect01"></label>
   <select name="scelta" class="form-select" id="inputGroupSelect01">
     <option selected>Seleziona il Gruppo</option>
-
     <option>Riparazioni</option>
     <option>Mezzi</option>
     <option>Clienti</option>
-
   </select>
-</div>
-  <input type="submit" name="sub" value="AGGIUNGI">
+  <br><br>
+  <input type="submit" name="sub" value="MOSTRA">
 </form>
 
-{%if controllo==0%}
-{%for item in listariparazioni%}
+{% if controllo==0 %}
+<h1>Riparazioni</h1>
+<table>
+<tr><td>Stato</td><td>Descrizione</td><td>Prezzo</td></tr>
+{% for item in listariparazioni %}
+<tr>
 <form action="" method="post">
-  <div class="input-group mb-3">
-  <select name={{item._id ~ "stato"}} class="form-select" id="inputGroupSelect01">
-    <option selected>{{item.stato}}</option>
-    <option>False</option>
-    <option>True</option>
-  </select>
-</div>
-  <input type="text" value="{{item.descrizione}}" name={{item._id ~ "descrizione"}}>
-  <input type="text" value="{{item.prezzo}}" name={{item._id ~ "prezzo"}}>
-  <input type="submit" name={{item._id}} value="Modifica">
-</form>
-{%endfor%}
-{%elif controllo==1%}
-{%for item in listamezzi%}
-<form action="" method="post">
-  <input type="text" value={{item.marca}} name={{item.targa ~ "marca"}}>
-  <input type="text" value={{item.modello}} name={{item.targa ~ "modello"}}>
-  <input type="text" value={{item.cilindrata}} name={{item.targa ~ "cilindrata"}}>
-  <input type="text" value={{item.potenza}} name={{item.targa ~ "potenza"}}>
-  <input type="submit" name={{item.targa}} value="Modifica">
-</form>
-{%endfor%}
-{%elif controllo==2%}
-{%for item in listaclienti%}
-<form action="" method="post">
-  <input type="text" value={{item.nome}} name={{item.cf ~ "nome"}}>
-  <input type="text" value={{item.cognome}} name={{item.cf ~ "cognome"}}>
-  <input type="text" value={{item.ntelefono}} name={{item.cf ~ "ntelefono"}}>
-  <input type="text" value={{item.email}} name={{item.cf ~ "email"}}>
-  <input type="submit" name={{item.cf}} value="Modifica">
-</form>
-{%endfor%}
-{%endif%}
+  <td><select name={{item._id ~ "stato"}} class="form-select" id="inputGroupSelect01">
+    {% if item.stato %}
+    <option selected>Terminato</option>
+    <option>In corso</option>
+    {% else %}
+    <option selected>In corso</option>
+    <option>Terminato</option>
+    {% endif %}
+  </select></td>
 
-<p>{{frase}}</p>
+  <td><input type="text" value="{{item.descrizione}}" name={{item._id ~ "descrizione"}}></td>
+  <td><input type="text" value="{{item.prezzo}}" name={{item._id ~ "prezzo"}}></td>
+  <td><input type="submit" name={{item._id}} value="Conferma la modifica"></td>
+  <td><input type="submit" name={{item._id ~ "delete"}} value="Elimina"></td>
+</form>
+<tr>
+{% endfor %}
+{% elif controllo==1 %}
+<h1>Mezzi</h1>
+<table>
+<tr><td>Marca</td><td>Modello</td><td>Cilindrata</td><td>Potenza</td></tr>
+{% for item in listamezzi %}
+<tr>
+<form action="" method="post">
+  <td><input type="text" value={{item.marca}} name={{item.targa ~ "marca"}}></td>
+  <td><input type="text" value={{item.modello}} name={{item.targa ~ "modello"}}></td>
+  <td><input type="text" value={{item.cilindrata}} name={{item.targa ~ "cilindrata"}}></td>
+  <td><input type="text" value={{item.potenza}} name={{item.targa ~ "potenza"}}></td>
+  <td><input type="submit" name={{item.targa}} value="Conferma la modifica"></td>
+  <td><input type="submit" name={{item.targa ~ "delete"}} value="Elimina"></td>
+</form>
+</tr>
+{% endfor %}
+</table>
+{% elif controllo==2 %}
+<h1>Clienti</h1>
+<table>
+<tr><td>Nome</td><td>Cognome</td><td>Telefono</td><td>Email</td></tr>
+{% for item in listaclienti %}
+<tr>
+<form action="" method="post">
+  <td><input type="text" value={{item.nome}} name={{item.cf ~ "nome"}}></td>
+  <td><input type="text" value={{item.cognome}} name={{item.cf ~ "cognome"}}></td>
+  <td><input type="text" value={{item.ntelefono}} name={{item.cf ~ "ntelefono"}}></td>
+  <td><input type="text" value={{item.email}} name={{item.cf ~ "email"}}></td>
+  <td><input type="submit" name={{item.cf}} value="Conferma la modifica"></td>
+  <td><input type="submit" name={{item.cf ~ "delete"}} value="Elimina"></td>
+</form>
+</tr>
+{% endfor %}
+</table>
+{% endif %}
+<center>
 {% endblock %}

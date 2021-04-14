@@ -1,25 +1,29 @@
 {% extends "template.html" %}
 {% block title%}Home{% endblock %}
 {% block pagecontent %}
+<center>
 <h1>Storico</h1>
-<br>
+
 <form class="" action="" method="POST">
-  <div class="input-group mb-3">
-  <select name="scelta" class="form-select" id="inputGroupSelect01">
+  <table>
+    <tr>
+    <td><p>Cerca tramite</p></td>
+    <td><select name="scelta" class="form-select" id="inputGroupSelect01">
     <option selected>Seleziona</option>
     <option>CF</option>
     <option>Targa</option>
-  </select>
-</div>
-
-<input type="text" name="ricerca" value=""><br>
-
-  <input type="submit" name="sub" value="AGGIUNGI">
+    </select></td>
+    <td><input type="text" name="ricerca" value=""></td>
+    </tr>
+    </table>
+    <input type="submit" name="sub" value="Cerca">
 </form>
+<p>{{frase}}</p>
 <br>
 {% if controllo==0%}
 <h2>Riparazioni</h2>
 {% for item in listariparazioni %}
+<div class="shadowbox-center">
 <p><b>Riparazione:</b></p>
 <p>Descrizione: {{item.descrizione}}</p>
 <p>Stato: {{item.stato}}</p>
@@ -27,11 +31,12 @@
 <p>Fine: {{item.fine}}</p>
 <p>Prezzo: {{item.prezzo}}</p>
 <p>Targa: {{item.targamezzo}}</p>
-<br>
+</div><br>
 {% endfor %}
 <br><br>
 <h2>Mezzi</h2>
 {% for item in listamezzi %}
+<div class="shadowbox-center">
 <p><b>Veicolo:</b></p>
 <p>Targa: {{item.targa}}</p>
 <p>Marca: {{item.marca}}</p>
@@ -39,21 +44,24 @@
 <p>Cilindrata: {{item.cilindrata}}</p>
 <p>Potenza: {{item.potenza}}</p>
 <p>Proprietario: {{item.cfcliente}}</p>
-<br>
+</div><br>
 {% endfor %}
 <br><br>
 <h2>Clienti</h2>
 {% for item in listaclienti %}
+<div class="shadowbox-center">
 <p><b>Cliente:</b></p>
 <p>Codice Fiscale: {{item.cf}}</p>
 <p>Nome: {{item.nome}}</p>
 <p>Cognome: {{item.cognome}}</p>
 <p>Numero di telefono: {{item.ntelefono}}</p>
 <p>Email: {{item.email}}</p>
-<br>
+</div><br>
 {% endfor %}
-{%elif controllo==1%}
+<br><br>
+{% elif controllo==1 %}
 {% for item in listariparazioni %}
+<div class="shadowbox-center">
 <p><b>Riparazione:</b></p>
 <p>Descrizione: {{item.descrizione}}</p>
 <p>Stato: {{item.stato}}</p>
@@ -61,9 +69,10 @@
 <p>Fine: {{item.fine}}</p>
 <p>Prezzo: {{item.prezzo}}</p>
 <p>Targa: {{item.targamezzo}}</p>
-<br>
+</div><br>
 {% endfor %}
 {% for item in listamacchine %}
+<div class="shadowbox-center">
 <p><b>Veicolo:</b></p>
 <p>Targa: {{item.targa}}</p>
 <p>Marca: {{item.marca}}</p>
@@ -71,10 +80,11 @@
 <p>Cilindrata: {{item.cilindrata}}</p>
 <p>Potenza: {{item.potenza}}</p>
 <p>Proprietario: {{item.cfcliente}}</p>
-<br>
+</div><br>
 {% endfor %}
 {%elif controllo==2%}
 {% for item in listariparazioni %}
+<div class="shadowbox-center">
 <p><b>Riparazione:</b></p>
 <p>Descrizione: {{item.descrizione}}</p>
 <p>Stato: {{item.stato}}</p>
@@ -82,18 +92,18 @@
 <p>Fine: {{item.fine}}</p>
 <p>Prezzo: {{item.prezzo}}</p>
 <p>Targa: {{item.targamezzo}}</p>
-<br>
+</div><br>
 {% endfor %}
 {% for item in listaproprietari %}
+<div class="shadowbox-center">
 <p><b>Proprietario:</b></p>
 <p>Codice Fiscale: {{item.cf}}</p>
 <p>Nome: {{item.nome}}</p>
 <p>Cognome: {{item.cognome}}</p>
 <p>Numero di telefono: {{item.ntelefono}}</p>
 <p>Email: {{item.email}}</p>
-<br>
+</div><br>
 {% endfor %}
 {%endif%}
-<br><br>
-<p>(da completare)</p>
+<center>
 {%endblock %}
