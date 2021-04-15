@@ -1,32 +1,22 @@
 {% extends "template.html" %}
 {% block title%}Riparazioni{% endblock %}
 {% block pagecontent %}
+<center>
 <h1>Riparazioni in corso</h1>
 <br>
 {% for item in listariparazioniincorso%}
-<div class="shadowbox">
-    <table class="tab">
-            <td>
-                    <td>
-                        <div class="int">
-                            <p>Data: {{item.inizio}}</p>
-                            <p>{{item.descrizione}}</p>
-                        </div>
-                        <div class="int">
-                            <p>Mezzo: {{item.marca}} {{item.modello}}</p>
-                            <p>Proprietario: {{item.cognome}} {{item.nome}}</p>
-                        </div>
-                        <div class="int">
-                            <p>Costo: {{item.prezzo}} €</p>
-                        </div>
-            </td>
-            <td>
-              <form action="" method="post">
-                <input type="submit" name={{item._id}} value="Terminato!">
-              </form>
-            </td>
-    </table>
+<div class="card">
+  <h3 class="card-header">{{item.descrizione}}</h3>
+  <div class="card-body">
+    <p class="card-text">Proprietario: {{item.cognome}} {{item.nome}}</p>
+    <p class="card-text">Mezzo: {{item.marca}} {{item.modello}}</p>
+    <p class="card-text">{{item.inizio}}</p>
+    <form action="" method="post">
+      <input type="submit" name={{item._id}} value="Terminato!">
+    </form>
+  </div>
 </div>
 <br>
 {%endfor%}
+</center>
 {%endblock %}

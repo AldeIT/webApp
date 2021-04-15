@@ -77,9 +77,139 @@ def inviamail(ricevente):
     msg.body = "Buongiorno, \n la riparazione sul mezzo: " + ricevente.marca + " " + ricevente.modello + ", a nome: " + ricevente.nome + " " + ricevente.cognome + "è terminata.\nPrezzo Finale: " + ricevente.prezzo + "\nSaluti, MechSite"
     mail.send(msg)
     return 1
+#pagina di login degli utenti
+@app.route("/", methods=["GET", "POST"])
+def accessoclienti():
+    frase=""
+    if request.method == "POST":
+        session.permanent = True
+        user = request.form["email"]
+        check_mail = Clienti.query.filter_by(email=user).first()
+        if check_mail:
+            session["cliente"] = user
+            return redirect(url_for("passwordclienti"))
+        else:
+            frase="email non trovata"
+            return render_template("accessoclienti.html", frase=frase)
+    else:
+        return render_template("accessoclienti.html", frase="")
+
+@app.route("/passwordclienti", methods=["GET", "POST"])
+def passwordclienti():
+    if "cliente" in session:
+        if request.method == "POST":
+            if "primapassword" in request.form:
+                cliente = Clienti.query.filter_by(email=session["cliente"]).first()
+                password = request.form["password"]
+                passwordrepeat = request.form["passwordrepeat"]
+                if password==passwordrepeat:
+                    session.permanent = True
+                    cliente.password=password
+                    db.session.commit()
+                    session["passcliente"]=password
+                    return redirect(url_for("passwordclienti"))
+                else:
+                    return render_template("passwordclienti.html", controllo=0, frase="Password non coincidono")
+            elif "accessopassword" in request.form:
+                cliente = Clienti.query.filter_by(email=session["cliente"]).first()
+                password = request.form["password"]
+                if cliente.password==password:
+                    session["passcliente"]=password
+                    return redirect(url_for("riparazioniclienti"))
+                else:
+                    return render_template("passwordclienti.html", controllo=1, frase="Password errata")
+        else:
+            cliente = Clienti.query.filter_by(email=session["cliente"]).first()
+            if cliente.password == None:
+                return render_template("passwordclienti.html", controllo=0)
+            else:
+                return render_template("passwordclienti.html", controllo=1)
+    else:
+        return redirect(url_for("accessoclienti"))
+
+#pagina che printa le riparazioni di un determinato utente
+@app.route("/riparazioniclienti", methods=["GET", "POST"])
+def riparazioniclienti():
+    if "cliente" in session and "passcliente" in session:
+        if request.method == "POST":
+            if request.form["scelta"]=="Tutte":
+                riparazioniincorso = Riparazioni.query.join(Mezzi, Riparazioni.targamezzo==Mezzi.targa).join(Clienti, Mezzi.cfcliente==Clienti.cf).add_columns(Riparazioni.inizio, Riparazioni.descrizione, Riparazioni.prezzo, Riparazioni.fine, Mezzi.marca, Mezzi.modello, Mezzi.targa).filter_by(email=session["cliente"]).all()
+                return render_template("riparazioniclienti.html", controllo=0, listariparazioni=riparazioniincorso)
+            elif request.form["scelta"]=="In corso":
+                riparazioniincorso = Riparazioni.query.join(Mezzi, Riparazioni.targamezzo==Mezzi.targa).join(Clienti, Mezzi.cfcliente==Clienti.cf).add_columns(Riparazioni.inizio, Riparazioni.descrizione, Riparazioni.prezzo, Riparazioni.fine, Mezzi.marca, Mezzi.modello, Mezzi.targa).filter_by(email=session["cliente"]).all()
+                return render_template("riparazioniclienti.html", controllo=1, listariparazioni=riparazioniincorso)
+            elif request.form["scelta"]=="Terminate":
+                riparazioniincorso = Riparazioni.query.join(Mezzi, Riparazioni.targamezzo==Mezzi.targa).join(Clienti, Mezzi.cfcliente==Clienti.cf).add_columns(Riparazioni.inizio, Riparazioni.descrizione, Riparazioni.prezzo, Riparazioni.fine, Mezzi.marca, Mezzi.modello, Mezzi.targa).filter_by(email=session["cliente"]).all()
+                return render_template("riparazioniclienti.html", controllo=2, listariparazioni=riparazioniincorso)
+        else:
+            return render_template("riparazioniclienti.html")
+    else:
+        return redirect(url_for("accessoclienti"))
+
+@app.route("/mezziclienti")
+def mezziclienti():
+    if "cliente" in session and "passcliente" in session:
+        mezzicliente = Mezzi.query.join(Clienti, Mezzi.cfcliente==Clienti.cf).add_columns(Mezzi.targa, Mezzi.marca, Mezzi.modello, Mezzi.cilindrata, Mezzi.potenza).filter_by(email=session["cliente"]).all()
+        return render_template("mezziclienti.html", listamezzi=mezzicliente)
+    else:
+        return redirect(url_for("accessoclienti"))
+
+@app.route("/profilo", methods=["GET", "POST"])
+def profilocliente():
+    if "cliente" in session and "passcliente" in session:
+        if request.method == "POST":
+            return redirect(url_for("modificaprofilocliente"))
+        else:
+            clientein = Clienti.query.filter_by(email=session["cliente"]).first()
+            return render_template("profilocliente.html", cliente=clientein)
+    else:
+        return redirect(url_for("accessoclienti"))
+
+@app.route("/modificaprofilo", methods=["GET", "POST"])
+def modificaprofilocliente():
+    if "cliente" in session and "passcliente" in session:
+        if request.method == "POST":
+            frase="Modificati: "
+            clientein = Clienti.query.filter_by(email=session["cliente"]).first()
+            email=request.form["email"]
+            ntelefono = request.form["ntelefono"]
+            if request.form["password"]==request.form["passwordrepeat"]:
+                password=request.form["password"]
+                clientein.password=password
+                frase += "Si Password "
+            else:
+                frase += "No Password"
+            if clientein.email != email:
+                clientein.email = email
+                frase += "Si Email "
+                session["cliente"]=email
+            else:
+                frase += "No Email"
+            if clientein.ntelefono != ntelefono:
+                clientein.ntelefono = ntelefono
+                frase += "Si Ntelefono "
+            else:
+                frase += "No Ntelefono"
+            db.session.commit()
+            clientein = Clienti.query.filter_by(email=session["cliente"]).first()
+            return render_template("modificaprofilocliente.html", cliente=clientein, frase=frase)
+        else:
+            clientein = Clienti.query.filter_by(email=session["cliente"]).first()
+            return render_template("modificaprofilocliente.html", cliente=clientein)
+    else:
+        return redirect(url_for("accessoclienti"))
+
+@app.route("/logoutcliente")
+def logoutcliente():
+    if "cliente" in session and "passcliente" in session:
+        session.pop("cliente", None)
+        session.pop("passcliente", None)
+        return redirect(url_for("accessoclienti"))
+    else:
+        return redirect(url_for("accessoclienti"))
 
 #Pagina di accesso Meccanico/Utenti(Da completare)
-@app.route("/", methods=["GET", "POST"])
+@app.route("/meccanico", methods=["GET", "POST"])
 def home():
     password = "meccanico"
     frase=""
@@ -298,6 +428,8 @@ def aggiuntamezzi():
             cilindrata = request.form["cilindrata"]
             potenza = request.form["potenza"]
             cfcliente = request.form["cfcliente"]
+            if cfcliente=="Aggiungi CF":
+                return redirect(url_for("aggiuntaclienti"))
             check_mezzo = Mezzi.query.filter_by(targa=targa).first()
             if check_mezzo:
                 return render_template("addmezzi.html", lista=listaclienti, frase="targa già inserita")

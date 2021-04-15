@@ -1,0 +1,20 @@
+{% extends "template-cliente.html" %}
+{% block title%}Home{% endblock %}
+{% block pagecontent %}
+<center>
+<h1>Esegui l'accesso</h1>
+<div>
+  <p>Nome : {{nome}}</p>
+  <p>Cognome: {{cognome}}</p>
+  <p>Codice Fiscale: {{cf}}</p>
+<form class="" action="" method="post">
+  <p>Email:</p><input type="password" name="n" value="{{email}}">
+  <p>Password:</p><input type="password" name="n" value="{{password}}">
+  <input type="password" name="n" value="" placeholder="Conferma nuova password">
+  <input type="submit" name="sub" value="Accedi">
+</form>
+</div>
+<br>
+<center>
+
+{%endblock %}

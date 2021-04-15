@@ -1,11 +1,14 @@
-{% extends "template.html" %}
+{% extends "template2.html" %}
 {% block title%}Home{% endblock %}
 {% block pagecontent %}
-<h1>Pagina Home/ login</h1>
+<center>
+<h1>Esegui l'accesso</h1>
 <form class="" action="" method="post">
   <input type="password" name="n" value="meccanico">
-  <input type="submit" name="sub" value="ok">
+  <input type="submit" name="sub" value="Accedi">
 </form>
-<p>Fiji non sa programmare</p>
-<p>{{frase}}</p>
+<br>
+<p class="error">{{frase}}</p>
+<center>
+
 {%endblock %}
