@@ -1,37 +1,58 @@
 {% extends "template.html" %}
 {% block title %}Aggiungi Mezzi{% endblock %}
 {%  block pagecontent %}
-
 <h1>Aggiunta Mezzo</h1>
+<div class="superiore">
+  <div class="card border-dark mb-3">
+    <h4 class="card-header">Nuovo Mezzo</h4>
+    <div class="card-body text-dark">
+      <form method="POST">
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="inputEmail4">Targa</label>
+            <input  name="targa" type="text" class="form-control" required>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="cf">Cf cliente</label>
+            <select onchange="openPage(this);" name="cfcliente" class="custom-select" id="inputGroupSelect01" required>
+              <option selected>...</option>
+              {% for item in lista %}
+              <option>{{item.cf}}</option>
+              {% endfor %}
+                <option value="Aggiungi CF">Nuovo Cliente</option>
+            </select>
+          </div>
+        </div>
 
-<form class="" action="" method="POST">
-  <label for="targa">Targa</label><br>
-  <input type="text" name="targa" value=""><br>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="marca">Marca</label>
+            <input  name="marca" type="text" class="form-control" required>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="modello">Modello</label>
+            <input name="modello" type="text" class="form-control" required>
+          </div>
+        </div>
 
-  <label for="marca">Marca</label><br>
-  <input type="text" name="marca" value=""><br>
-
-  <label for="modello">Modello</label><br>
-  <input type="text" name="modello" value=""><br>
-
-  <label for="cilindrata">Cilindrata (CC)</label><br>
-  <input type="text" name="cilindrata" value=""><br>
-
-  <label for="potenza">Potenza (CV)</label><br>
-  <input type="text" name="potenza" value=""><br>
-
-  <div class="input-group mb-3">
-  <label class="input-group-text" for="inputGroupSelect01">CF</label>
-  <select name="cfcliente" class="form-select" id="inputGroupSelect01">
-    <option selected>Scegli il CF...</option>
-    {% for item in lista %}
-    <option>{{item.cf}}</option>
-    {% endfor %}
-  </select>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="cilindrata">Cilindrata</label>
+            <input  name="cilindrata" type="text" class="form-control" required>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="potenza">Potenza</label>
+            <input name="potenza" type="text" class="form-control" required>
+          </div>
+        </div>
+        <br>
+        <center>
+        <input name="sub" class="btn btn-primary btn-outline-primary btn-lg" type="submit" value="Aggiungi">
+        </center>
+        <br>
+      </form>
+    </div>
+  </div>
 </div>
-
-  <input type="submit" name="sub" value="AGGIUNGI">
-</form>
-
-<p>{{frase}}</p>
+</center>
 {% endblock %}

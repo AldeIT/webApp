@@ -14,32 +14,68 @@
   </select>
   <br><br>
   <input type="submit" name="sub" value="MOSTRA">
+  <br><br>
 </form>
 
 {% if controllo==0 %}
-<h1>Riparazioni</h1>
-<table>
-<tr><td>Stato</td><td>Descrizione</td><td>Prezzo</td></tr>
-{% for item in listariparazioni %}
-<tr>
-<form action="" method="post">
-  <td><select name={{item._id ~ "stato"}} class="form-select" id="inputGroupSelect01">
-    {% if item.stato %}
-    <option selected>Terminato</option>
-    <option>In corso</option>
-    {% else %}
-    <option selected>In corso</option>
-    <option>Terminato</option>
-    {% endif %}
-  </select></td>
+<div class="superioregestionale">
+  <div class="card border-dark mb-3">
+    <h4 class="card-header">Riparazioni</h4>
+    <div class="card-body text-dark">
+      {% for item in listariparazioni %}
+        <form method="POST">
+          <div class="form-row">
+            <div class="col-auto">
+              {%if stampa%}
+                <label for="inlineFormCustomSelect">Stato</label>
+              {%else%}
+                <label class="sr-only" for="inlineFormCustomSelect">Stato</label>
+              {%endif%}
+              <select name={{item._id ~ "stato"}} class="custom-select mr-sm-2" id="inlineFormCustomSelect">
+                {% if item.stato %}
+                <option selected>Terminato</option>
+                <option>In corso</option>
+                {% else %}
+                <option selected>In corso</option>
+                <option>Terminato</option>
+                {% endif %}
+              </select>
+            </div>
 
-  <td><input type="text" value="{{item.descrizione}}" name={{item._id ~ "descrizione"}}></td>
-  <td><input type="text" value="{{item.prezzo}}" name={{item._id ~ "prezzo"}}></td>
-  <td><input type="submit" name={{item._id}} value="Conferma la modifica"></td>
-  <td><input type="submit" name={{item._id ~ "delete"}} value="Elimina"></td>
-</form>
-<tr>
-{% endfor %}
+            <div class="col">
+              {%if stampa%}
+                <label for="inlineFormInputName2">Descrizione</label>
+              {%else%}
+                <label class="sr-only" for="inlineFormInputName2">Descrizione</label>
+              {%endif%}
+              <input value="{{item.descrizione}}" name={{item._id ~ "descrizione"}} type="text" class="form-control mb-2 mr-sm-2">
+            </div>
+
+            <div class="col-auto">
+              {%if stampa%}
+                <label for="inlineFormInputName2">Prezzo</label>
+              {%else%}
+                <label class="sr-only" for="inlineFormInputName2">Prezzo</label>
+              {%endif%}
+              <input value="{{item.prezzo}}" name={{item._id ~ "prezzo"}} type="text" class="form-control mb-2 mr-sm-2">
+            </div>
+
+            <div class="col-auto">
+                <button name={{item._id}} type="submit" class="btn btn-primary mb-2">Conferma modifica</button>
+            </div>
+
+            <div class="col-auto">
+              <button name={{item._id ~ "delete"}} type="submit" class="btn btn-primary mb-2">Elimina</button>
+            </div>
+          </div>
+        </form>
+        {% set stampa = False %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+
 {% elif controllo==1 %}
 <h1>Mezzi</h1>
 <table>
@@ -75,5 +111,5 @@
 {% endfor %}
 </table>
 {% endif %}
-<center>
+</center>
 {% endblock %}

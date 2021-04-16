@@ -1,27 +1,46 @@
 {% extends "template.html" %}
 {% block title %}Aggiungi Clienti{% endblock %}
 {%  block pagecontent %}
-
 <h1>Aggiunta Cliente</h1>
+<div class="superiore">
+  <div class="card border-dark mb-3">
+    <h4 class="card-header">Nuovo Cliente</h4>
+    <div class="card-body text-dark">
+      <form method="POST">
+        <div class="form-group">
+          <label for="codicefiscale">Codice Fiscale</label>
+          <input name="cf" type="text" class="form-control" required>
+        </div>
 
-<form class="" action="" method="POST">
-  <label for="cf">Codice Fiscale</label><br>
-  <input type="text" name="cf" value=""><br>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="inputEmail4">Nome</label>
+            <input  name="nome" type="text" class="form-control" required>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="inputPassword4">Cognome</label>
+            <input name="cognome" type="text" class="form-control" required>
+          </div>
+        </div>
 
-  <label for="nome">Nome</label><br>
-  <input type="text" name="nome" value=""><br>
-
-  <label for="cognome">Cognome</label><br>
-  <input type="text" name="cognome" value=""><br>
-
-  <label for="ntelefono">Numero Telefonico</label><br>
-  <input type="text" name="ntelefono" value=""><br>
-
-  <label for="email">Email</label><br>
-  <input type="text" name="email" value=""><br>
-
-  <input type="submit" name="sub" value="AGGIUNGI">
-</form>
-
-<p>{{frase}}</p>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="inputEmail4">Numero di telefono</label>
+            <input  name="ntelefono" type="text" class="form-control" required>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="inputPassword4">Email</label>
+            <input name="email" type="email" class="form-control" required>
+          </div>
+        </div>
+        <br>
+        <center>
+          <input name="sub" class="btn btn-primary btn-outline-primary btn-lg" type="submit" value="Aggiungi">
+        </center>
+        <br>
+      </form>
+    </div>
+  </div>
+</div>
+<br>
 {% endblock %}

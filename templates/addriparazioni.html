@@ -1,28 +1,44 @@
 {% extends "template.html" %}
 {% block title %}Aggiungi Riparazioni{% endblock %}
 {%  block pagecontent %}
-
 <h1>Aggiunta Riparazione</h1>
-
-<form class="" action="" method="POST">
-  <label for="descrizione">Descrizione</label><br>
-  <input type="text" name="descrizione" value=""><br>
-
-  <label for="prezzo">Prezzo</label><br>
-  <input type="text" name="prezzo" value=""><br>
-
-  <div class="input-group mb-3">
-  <label class="input-group-text" for="inputGroupSelect01">Targa</label>
-  <select name="targamezzo" class="form-select" id="inputGroupSelect01">
-    <option selected>Seleziona la targa</option>
-    {% for item in lista %}
-    <option>{{item.targa}}</option>
-    {% endfor %}
-  </select>
+<div class="superiore">
+  <div class="card border-dark mb-3">
+    <h4 class="card-header">Nuova Riparazione</h4>
+    <div class="card-body text-dark">
+      <form class="" action="" method="POST">
+        <div class="form-group">
+          <label for="exampleFormControlTextarea1">Descrizione</label>
+          <textarea name="descrizione" class="form-control" id="exampleFormControlTextarea1" rows="3" required></textarea>
+        </div>
+        <br>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">Prezzo</span>
+          </div>
+          <input name="prezzo" type="text" class="form-control" aria-label="Prezzo" aria-describedby="basic-addon1" required>
+        </div>
+        <br>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <label class="input-group-text" for="inputGroupSelect01">Targa</label>
+          </div>
+          <select onchange="openPageRip(this);" name="targamezzo" class="custom-select" id="inputGroupSelect01" required>
+            <option selected>...</option>
+            {% for item in lista %}
+            <option>{{item.targa}}</option>
+            {% endfor %}
+            <option value="Aggiungi Targa">Nuovo Mezzo</option>
+          </select>
+        </div>
+        <br>
+        <center>
+        <input name="sub" class="btn btn-primary btn-outline-primary btn-lg" type="submit" value="Aggiungi">
+        </center>
+        <br>
+      </form>
+    </div>
+  </div>
 </div>
-
-  <input type="submit" name="sub" value="AGGIUNGI">
-</form>
-
-<p>{{frase}}</p>
+</center>
 {% endblock %}

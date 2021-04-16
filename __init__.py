@@ -7,6 +7,8 @@ import time
 import smtplib, ssl
 from email.message import EmailMessage
 from flask_mail import Mail, Message as MailMessage
+from pathlib import Path
+from fpdf import FPDF
 #parametri di configurazione dell'app
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///db.sqlite3"
@@ -74,9 +76,23 @@ class Riparazioni(db.Model):
 
 def inviamail(ricevente):
     msg = MailMessage('NoReply - Officina', sender='assistenza.mechsite@gmail.com', recipients=[ricevente.email])
-    msg.body = "Buongiorno, \n la riparazione sul mezzo: " + ricevente.marca + " " + ricevente.modello + ", a nome: " + ricevente.nome + " " + ricevente.cognome + "è terminata.\nPrezzo Finale: " + ricevente.prezzo + "\nSaluti, MechSite"
+    msg.body = "Buongiorno, \n la riparazione sul mezzo: " + ricevente.marca + " " + ricevente.modello + ", a nome: " + ricevente.nome + " " + ricevente.cognome + " è terminata.\nPrezzo Finale: " + ricevente.prezzo + "\nSaluti, MechSite"
+    with app.open_resource("/var/www/webApp/webApp/static/blank.pdf") as fp:
+        msg.attach("Resoconto.pdf", "application/pdf", fp.read())
     mail.send(msg)
     return 1
+
+def generapdf(ricevente):
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", size = 15)
+    pdf.cell(200, 10, txt = "Resoconto Finale", ln = 2, align = 'C')
+    pdf.set_font("Arial", size = 11)
+    pdf.cell(200, 10, txt = "Buongiorno, \n la riparazione sul mezzo: " + ricevente.marca + " " + ricevente.modello + ", a nome: " + ricevente.nome + " " + ricevente.cognome + " è terminata.", ln = 2, align = 'L')
+    pdf.cell(200, 10, txt = "\nPrezzo Finale: " + ricevente.prezzo + "\nSaluti, MechSite", ln = 2, align = 'L')
+
+    pdf.output("/var/www/webApp/webApp/static/blank.pdf")
+
 #pagina di login degli utenti
 @app.route("/", methods=["GET", "POST"])
 def accessoclienti():
@@ -173,7 +189,7 @@ def modificaprofilocliente():
             clientein = Clienti.query.filter_by(email=session["cliente"]).first()
             email=request.form["email"]
             ntelefono = request.form["ntelefono"]
-            if request.form["password"]==request.form["passwordrepeat"]:
+            if request.form["password"]==request.form["passwordrepeat"] and request.form["password"]!="":
                 password=request.form["password"]
                 clientein.password=password
                 frase += "Si Password "
@@ -241,7 +257,8 @@ def riparazioni():
                     riparazione.stato=True
                     riparazione.fine=datetime.now(tz)
                     db.session.commit()
-                    #n = inviamail(ricevente)
+                    generapdf(ricevente)
+                    n = inviamail(ricevente)
                     break
             riparazioniincorso = Clienti.query.join(Mezzi, Clienti.cf==Mezzi.cfcliente).join(Riparazioni, Mezzi.targa==Riparazioni.targamezzo).add_columns(Riparazioni.inizio, Riparazioni.descrizione, Riparazioni.prezzo, Riparazioni._id, Mezzi.marca, Mezzi.modello, Clienti.nome, Clienti.cognome).filter_by(fine="in corso...").all()
             return render_template("riparazioni.html", listariparazioniincorso=riparazioniincorso)
@@ -311,6 +328,8 @@ def gestionale():
                     elif request.form[var + "stato"]=="Terminato":
                         riparazione.stato=True
                         riparazione.fine = datetime.now(tz)
+                        ricevente = Clienti.query.join(Mezzi, Clienti.cf==Mezzi.cfcliente).join(Riparazioni, Mezzi.targa==Riparazioni.targamezzo).add_columns( Riparazioni._id, Mezzi.marca, Mezzi.modello, Clienti.email, Clienti.nome, Clienti.cognome, Riparazioni.prezzo).filter_by(_id=i._id).first()
+                        n = inviamail(ricevente)
                     riparazione.descrizione=request.form[var + "descrizione"]
                     riparazione.prezzo=request.form[var + "prezzo"]
                     db.session.commit()
