@@ -33,3 +33,75 @@ body{
 .error {
   color: red;
 }
+
+.superiore{
+  margin: auto;
+  width: 40vw;
+}
+
+.superioregestionale{
+  margin: auto;
+  width: 70vw;
+}
+
+h1{
+  text-align: center;
+}
+
+h4{
+  text-align: center;
+}
+
+#gue{
+  padding-left: 20px;
+  padding-right:20px;
+}
+
+#franco{
+  padding-left: 0px;
+}
+#paolo{
+  padding-left: 20px;
+  padding-right:20px;
+}
+
+#john {
+    color: white;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.alzati{
+  padding-top: 12.75px;
+  padding-bottom: 12.75px;
+  margin-bottom: 0px;
+}
+.alzatidai{
+  padding-top: 22.6px;
+  padding-bottom: 22.1px;
+  margin-bottom: 0px;
+}
+
+.alzatidaidai{
+  padding-top: 19px;
+  padding-bottom: 22.1px;
+  margin-bottom: 0px;
+}
+
+#centrati{
+  text-align: center;
+}
+
+.log{
+  width: 30vw;
+}
+
+@media only screen and (max-width: 700px) and (min-width: 100px){
+  .superiore{
+    width: 70vw;
+  }
+}
