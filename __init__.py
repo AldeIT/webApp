@@ -1,5 +1,5 @@
 #importazione dei pacchetti necessari
-from flask import Flask, redirect, url_for, render_template, request, session, flash
+from flask import Flask, redirect, url_for, render_template, request, session, flash, send_file, send_from_directory
 from datetime import timedelta, datetime
 import pytz
 from flask_sqlalchemy import SQLAlchemy
@@ -62,15 +62,13 @@ class Mezzi(db.Model):
 #Classe/Tabella DB Riparazioni(id*, stato, inizio, fine, prezzo, descrizione, targamezzo->)
 class Riparazioni(db.Model):
     _id = db.Column("id", db.Integer, primary_key=True)
-    stato = db.Column("stato", db.Boolean, default=False)
     inizio = db.Column("inizio", db.String(30))
     fine = db.Column("fine", db.String(30))
     prezzo = db.Column("prezzo", db.String(10))
     descrizione = db.Column("descrizione", db.String(50))
     targamezzo = db.Column("targamezzo", db.String(20), db.ForeignKey('mezzi.targa'), nullable=False)
 
-    def __init__(self, stato, inizio, fine, prezzo, descrizione, targamezzo):
-        self.stato = stato
+    def __init__(self, inizio, fine, prezzo, descrizione, targamezzo):
         self.inizio = inizio
         self.fine = fine
         self.prezzo = prezzo
@@ -84,6 +82,21 @@ def inviamail(ricevente):
         msg.attach("Resoconto.pdf", "application/pdf", fp.read())
     mail.send(msg)
     return 1
+
+def addlog(str):
+    tz = pytz.timezone("Europe/Rome")
+    stringa = datetime.now().strftime("%m/%d/%Y, %H:%M:%S") + " " + str
+    file = open("/var/www/webApp/webApp/static/log.txt", "a")
+    file.write(stringa)
+
+@app.route('/static/<path:filename>', methods=['GET', 'POST'])
+def download(filename):
+    # Appending app path to upload folder path within app root folder
+    #uploads = os.path.join(current_app.root_path, app.config['UPLOAD_FOLDER'])
+    # Returning file from appended path
+    #return send_from_directory(directory=uploads, filename=filename, as_attachment=True)
+    stringa = "/var/www/webApp/webApp/static/" + "blank.pdf"
+    return send_file(stringa, as_attachment=True)
 
 def generapdf(ricevente):
     html = """
@@ -139,10 +152,11 @@ def accessoclienti():
             session["cliente"] = user
             return redirect(url_for("passwordclienti"))
         else:
-            frase="email non trovata"
+            frase="Email non Trovata"
             return render_template("accessoclienti.html", frase=frase)
     else:
         return render_template("accessoclienti.html", frase="")
+
 
 @app.route("/passwordclienti", methods=["GET", "POST"])
 def passwordclienti():
@@ -167,7 +181,7 @@ def passwordclienti():
                     session["passcliente"]=password
                     return redirect(url_for("riparazioniclienti"))
                 else:
-                    return render_template("passwordclienti.html", controllo=1, frase="Password errata")
+                    return render_template("passwordclienti.html", controllo=1, frase="Password Errata")
         else:
             cliente = Clienti.query.filter_by(email=session["cliente"]).first()
             if cliente.password == None:
@@ -186,19 +200,19 @@ def riparazioniclienti():
                 riparazioniincorso = Riparazioni.query.join(Mezzi, Riparazioni.targamezzo==Mezzi.targa).join(Clienti, Mezzi.cfcliente==Clienti.cf).add_columns(Riparazioni.inizio, Riparazioni.descrizione, Riparazioni.prezzo, Riparazioni.fine, Mezzi.marca, Mezzi.modello, Mezzi.targa).filter_by(email=session["cliente"]).all()
                 if (len(riparazioniincorso)==0):
                     return render_template("riparazioniclienti.html", controllo=0, frase="Nessun Record Trovato")
-                return render_template("riparazioniclienti.html", controllo=0, listariparazioni=riparazioniincorso)
+                return render_template("riparazioniclienti.html", controllo=0, listariparazioni=riparazioniincorso, frase="")
             elif request.form["scelta"]=="In corso":
                 riparazioniincorso = Riparazioni.query.join(Mezzi, Riparazioni.targamezzo==Mezzi.targa).join(Clienti, Mezzi.cfcliente==Clienti.cf).add_columns(Riparazioni.inizio, Riparazioni.descrizione, Riparazioni.prezzo, Riparazioni.fine, Mezzi.marca, Mezzi.modello, Mezzi.targa).filter_by(email=session["cliente"]).all()
                 if (len(riparazioniincorso)==0):
                     return render_template("riparazioniclienti.html", controllo=1, frase="Nessun Record Trovato")
-                return render_template("riparazioniclienti.html", controllo=1, listariparazioni=riparazioniincorso)
+                return render_template("riparazioniclienti.html", controllo=1, listariparazioni=riparazioniincorso, frase="")
             elif request.form["scelta"]=="Terminate":
                 riparazioniincorso = Riparazioni.query.join(Mezzi, Riparazioni.targamezzo==Mezzi.targa).join(Clienti, Mezzi.cfcliente==Clienti.cf).add_columns(Riparazioni.inizio, Riparazioni.descrizione, Riparazioni.prezzo, Riparazioni.fine, Mezzi.marca, Mezzi.modello, Mezzi.targa).filter_by(email=session["cliente"]).all()
                 if (len(riparazioniincorso)==0):
                     return render_template("riparazioniclienti.html", controllo=2, frase="Nessun Record Trovato")
-                return render_template("riparazioniclienti.html", controllo=2, listariparazioni=riparazioniincorso)
+                return render_template("riparazioniclienti.html", controllo=2, listariparazioni=riparazioniincorso, frase="")
         else:
-            return render_template("riparazioniclienti.html")
+            return render_template("riparazioniclienti.html", frase="")
     else:
         return redirect(url_for("accessoclienti"))
 
@@ -227,33 +241,29 @@ def profilocliente():
 def modificaprofilocliente():
     if "cliente" in session and "passcliente" in session:
         if request.method == "POST":
-            frase="Modificati: "
+            frase=""
             clientein = Clienti.query.filter_by(email=session["cliente"]).first()
             email=request.form["email"]
             ntelefono = request.form["ntelefono"]
             if request.form["password"]==request.form["passwordrepeat"] and request.form["password"]!="":
                 password=request.form["password"]
                 clientein.password=password
-                frase += "Si Password "
-            else:
-                frase += "No Password"
+                frase += "Password modificata "
+            elif request.form["password"]!="":
+                frase="Le due password non coincidono"
             if clientein.email != email:
                 clientein.email = email
-                frase += "Si Email "
+                frase += "Email modificata  "
                 session["cliente"]=email
-            else:
-                frase += "No Email"
             if clientein.ntelefono != ntelefono:
                 clientein.ntelefono = ntelefono
-                frase += "Si Ntelefono "
-            else:
-                frase += "No Ntelefono"
+                frase += "Numero di Telefono modificato"
             db.session.commit()
             clientein = Clienti.query.filter_by(email=session["cliente"]).first()
             return render_template("modificaprofilocliente.html", cliente=clientein, frase=frase)
         else:
             clientein = Clienti.query.filter_by(email=session["cliente"]).first()
-            return render_template("modificaprofilocliente.html", cliente=clientein)
+            return render_template("modificaprofilocliente.html", cliente=clientein, frase="")
     else:
         return redirect(url_for("accessoclienti"))
 
@@ -278,7 +288,7 @@ def home():
             session["pass"] = user
             return redirect(url_for("riparazioni"))
         else:
-            frase="password errata"
+            frase="Password Errata"
             return render_template("index.html", frase=frase)
     else:
         return render_template("index.html", frase="")
@@ -287,6 +297,7 @@ def home():
 @app.route("/riparazioni", methods=["GET", "POST"])
 def riparazioni():
     if "pass" in session:
+        frase=""
         tz = pytz.timezone("Europe/Rome")
         riparazioniincorso = Clienti.query.join(Mezzi, Clienti.cf==Mezzi.cfcliente).join(Riparazioni, Mezzi.targa==Riparazioni.targamezzo).add_columns(Riparazioni.inizio, Riparazioni.descrizione, Riparazioni.prezzo, Riparazioni._id, Mezzi.marca, Mezzi.modello, Clienti.nome, Clienti.cognome).filter_by(fine="in corso...").all()
         if request.method == "POST":
@@ -296,17 +307,17 @@ def riparazioni():
                 if str(i._id) in request.form:
                     riparazione = Riparazioni.query.filter_by(_id=i._id).first()
                     ricevente = Clienti.query.join(Mezzi, Clienti.cf==Mezzi.cfcliente).join(Riparazioni, Mezzi.targa==Riparazioni.targamezzo).add_columns( Riparazioni._id, Mezzi.marca, Mezzi.modello, Clienti.email, Clienti.nome, Clienti.cognome, Riparazioni.prezzo, Riparazioni.descrizione, Mezzi.cilindrata, Mezzi.potenza, Mezzi.targa).filter_by(_id=i._id).first()
-                    riparazione.stato=True
                     riparazione.fine=datetime.now(tz)
                     db.session.commit()
                     generapdf(ricevente)
                     n = inviamail(ricevente)
                     break
             riparazioniincorso = Clienti.query.join(Mezzi, Clienti.cf==Mezzi.cfcliente).join(Riparazioni, Mezzi.targa==Riparazioni.targamezzo).add_columns(Riparazioni.inizio, Riparazioni.descrizione, Riparazioni.prezzo, Riparazioni._id, Mezzi.marca, Mezzi.modello, Clienti.nome, Clienti.cognome).filter_by(fine="in corso...").all()
-            return render_template("riparazioni.html", listariparazioniincorso=riparazioniincorso)
+            return render_template("riparazioni.html", listariparazioniincorso=riparazioniincorso, frase="")
         else:
-
-            return render_template("riparazioni.html", listariparazioniincorso=riparazioniincorso)
+            if len(riparazioniincorso)==0:
+                frase = "Nessuna riparazione in corso"
+            return render_template("riparazioni.html", listariparazioniincorso=riparazioniincorso, frase=frase)
     else:
         return redirect(url_for("home"))
 
@@ -321,21 +332,27 @@ def storico():
                 cfin = request.form["ricerca"]
                 lista=Mezzi.query.filter_by(cfcliente=cfin).all()
                 lista2 = Riparazioni.query.join(Mezzi, Riparazioni.targamezzo==Mezzi.targa).join(Clienti, Mezzi.cfcliente==Clienti.cf).filter_by(cf=cfin).all()
-                return render_template("storico.html", controllo=1, listariparazioni=lista2, listamacchine=lista)
+                if (len(lista)==0 and len(lista2)==0):
+                    return render_template("storico.html", controllo=1, listariparazioni=lista2, listamacchine=lista, frase="Nessun Record Trovato")
+                else:
+                    return render_template("storico.html", controllo=1, listariparazioni=lista2, listamacchine=lista, frase="")
             elif scelta=="Targa":
                 #ricerca Riparazioni e Proprietario associati alla Targa inserita
                 targain=request.form["ricerca"]
                 lista=Clienti.query.join(Mezzi, Clienti.cf==Mezzi.cfcliente).filter_by(targa=targain).all()
                 lista2 = Riparazioni.query.filter_by(targamezzo=targain).all()
-                return render_template("storico.html", controllo=2, listariparazioni=lista2, listaproprietari=lista)
+                if (len(lista)==0 and len(lista2)==0):
+                    return render_template("storico.html", controllo=2, listariparazioni=lista2, listaproprietari=lista, frase="Nessun Record Trovato")
+                else:
+                    return render_template("storico.html", controllo=2, listariparazioni=lista2, listaproprietari=lista, frase="")
             else:
-                return render_template("storico.html", frase="record non trovati")
+                return render_template("storico.html", frase="Nessun Record Trovato")
         else:
-            #se non viene selezionata un'opzione vengono printati tutte le riparazione, clienti, mezzi
+            #se non viene selezionata un'opzione vengono printati tutte le riparazione, clienti, mezzi, no andrebbe nell'else qua sopra, gg alde
             lista1 = Clienti.query.all()
             lista2 = Mezzi.query.all()
             lista3 = Riparazioni.query.all()
-            return render_template("storico.html", controllo=0, listariparazioni=lista3, listamezzi=lista2, listaclienti=lista1)
+            return render_template("storico.html", controllo=0, listariparazioni=lista3, listamezzi=lista2, listaclienti=lista1, frase="")
     else:
         return redirect(url_for("home"))
 
@@ -345,23 +362,37 @@ def gestionale():
     if "pass" in session:
         tz = pytz.timezone("Europe/Rome")
         if request.method=="POST":
+            frase=""
             if "scelta" in request.form:
+                frase=""
                 scelta = request.form["scelta"]
                 #In base alla scelta viene printato una tabella differente
                 if scelta=="Riparazioni":
                     lista = Riparazioni.query.all()
-                    return render_template("gestionale.html", controllo=0, listariparazioni=lista)
+                    if len(lista)==0:
+                        frase="Nessuna Riparazione Trovata"
+                    return render_template("gestionale.html", controllo=0, listariparazioni=lista, frase=frase)
                 elif scelta=="Mezzi":
                     lista = Mezzi.query.all()
-                    return render_template("gestionale.html", controllo=1, listamezzi=lista)
+                    if len(lista)==0:
+                        frase="Nessun Mezzo Trovato"
+                    return render_template("gestionale.html", controllo=1, listamezzi=lista, frase=frase)
                 elif scelta=="Clienti":
                     lista = Clienti.query.all()
-                    return render_template("gestionale.html", controllo=2, listaclienti=lista)
+                    if len(lista)==0:
+                        frase="Nessun Cliente Trovato"
+                    return render_template("gestionale.html", controllo=2, listaclienti=lista, frase=frase)
                 elif scelta=="Completo":
                     lista = Riparazioni.query.all()
+                    if len(lista)==0:
+                        frase="Nessuna Riparazione Trovata"
                     lista1 = Mezzi.query.all()
+                    if len(lista1)==0:
+                        frase+="Nessun Mezzo Trovato"
                     lista2 = Clienti.query.all()
-                    return render_template("gestionale.html", controllo=3, listariparazioni=lista, listamezzi=lista1, listaclienti=lista2)
+                    if len(lista2)==0:
+                        frase+="Nessun Cliente Trovato"
+                    return render_template("gestionale.html", controllo=3, listariparazioni=lista, listamezzi=lista1, listaclienti=lista2, frase=frase)
             ids = Riparazioni.query.all()
             for i in ids:
                 strdelete = str(i._id) + "delete"
@@ -371,10 +402,8 @@ def gestionale():
                     riparazione = Riparazioni.query.filter_by(_id=i._id).first()
                     var = str(i._id)
                     if request.form[var + "stato"]=="In corso":
-                        riparazione.stato=False
                         riparazione.fine = "in corso..."
                     elif request.form[var + "stato"]=="Terminato":
-                        riparazione.stato=True
                         riparazione.fine = datetime.now(tz)
                         ricevente = Clienti.query.join(Mezzi, Clienti.cf==Mezzi.cfcliente).join(Riparazioni, Mezzi.targa==Riparazioni.targamezzo).add_columns( Riparazioni._id, Mezzi.marca, Mezzi.modello, Clienti.email, Clienti.nome, Clienti.cognome, Riparazioni.prezzo, Mezzi.targa).filter_by(_id=i._id).first()
                         n = inviamail(ricevente)
@@ -382,20 +411,20 @@ def gestionale():
                     riparazione.prezzo=request.form[var + "prezzo"]
                     db.session.commit()
                     lista = Riparazioni.query.all()
-                    return render_template("gestionale.html", controllo=0, listariparazioni=lista)
+                    return render_template("gestionale.html", controllo=0, listariparazioni=lista, frase="")
                 elif strdelete in request.form:
                     Riparazioni.query.filter_by(_id=i._id).delete()
                     db.session.commit()
                     lista = Riparazioni.query.all()
-                    return render_template("gestionale.html", controllo=0, listariparazioni=lista)
+                    if len(lista)==0:
+                        frase="Nessuna Riparazione Trovata"
+                    return render_template("gestionale.html", controllo=0, listariparazioni=lista, frase=frase)
                 elif strcompleto in request.form:
                     id=strcompleto[:-1]
                     riparazione = Riparazioni.query.filter_by(_id=id).first()
                     if request.form[id + "stato3"]=="In corso":
-                        riparazione.stato=False
                         riparazione.fine = "in corso..."
                     elif request.form[id + "stato3"]=="Terminato":
-                        riparazione.stato=True
                         riparazione.fine = datetime.now(tz)
                         ricevente = Clienti.query.join(Mezzi, Clienti.cf==Mezzi.cfcliente).join(Riparazioni, Mezzi.targa==Riparazioni.targamezzo).add_columns( Riparazioni._id, Mezzi.marca, Mezzi.modello, Clienti.email, Clienti.nome, Clienti.cognome, Riparazioni.prezzo).filter_by(_id=id).first()
                         n = inviamail(ricevente)
@@ -405,14 +434,20 @@ def gestionale():
                     lista = Riparazioni.query.all()
                     lista1 = Mezzi.query.all()
                     lista2 = Clienti.query.all()
-                    return render_template("gestionale.html", controllo=3, listariparazioni=lista, listamezzi=lista1, listaclienti=lista2)
+                    return render_template("gestionale.html", controllo=3, listariparazioni=lista, listamezzi=lista1, listaclienti=lista2, frase="")
                 elif strdelete+"3" in request.form:
                     Riparazioni.query.filter_by(_id=i._id).delete()
                     db.session.commit()
                     lista = Riparazioni.query.all()
+                    if len(lista)==0:
+                        frase="Nessuna Riparazione Trovata"
                     lista1 = Mezzi.query.all()
+                    if len(lista1)==0:
+                        frase+="Nessun Mezzo Trovato"
                     lista2 = Clienti.query.all()
-                    return render_template("gestionale.html", controllo=3, listariparazioni=lista, listamezzi=lista1, listaclienti=lista2)
+                    if len(lista2)==0:
+                        frase+="Nessun Cliente Trovato"
+                    return render_template("gestionale.html", controllo=3, listariparazioni=lista, listamezzi=lista1, listaclienti=lista2, frase=frase)
 
             targhe = Mezzi.query.all()
             for i in targhe:
@@ -426,13 +461,15 @@ def gestionale():
                     mezzo.potenza = request.form[i.targa + "potenza"]
                     db.session.commit()
                     lista = Mezzi.query.all()
-                    return render_template("gestionale.html", controllo=1, listamezzi=lista)
+                    return render_template("gestionale.html", controllo=1, listamezzi=lista, frase="")
                 elif strdelete in request.form:
                     Riparazioni.query.filter_by(targamezzo=i.targa).delete()
                     Mezzi.query.filter_by(targa=i.targa).delete()
                     db.session.commit()
                     lista = Mezzi.query.all()
-                    return render_template("gestionale.html", controllo=1, listamezzi=lista)
+                    if len(lista)==0:
+                        frase="Nessun Mezzo Trovato"
+                    return render_template("gestionale.html", controllo=1, listamezzi=lista, frase=frase)
                 elif strcompleto in request.form:
                     targain = strcompleto[:-1]
                     mezzo = Mezzi.query.filter_by(targa=targain).first()
@@ -442,17 +479,29 @@ def gestionale():
                     mezzo.potenza = request.form[targain + "potenza3"]
                     db.session.commit()
                     lista = Riparazioni.query.all()
+                    if len(lista)==0:
+                        frase="Nessun Riparazione Trovata"
                     lista1 = Mezzi.query.all()
+                    if len(lista1)==0:
+                        frase+="Nessun Mezzo Trovato"
                     lista2 = Clienti.query.all()
-                    return render_template("gestionale.html", controllo=3, listariparazioni=lista, listamezzi=lista1, listaclienti=lista2)
+                    if len(lista2)==0:
+                        frase+="Nessun Cliente Trovato"
+                    return render_template("gestionale.html", controllo=3, listariparazioni=lista, listamezzi=lista1, listaclienti=lista2, frase=frase)
                 elif strdelete+"3" in request.form:
                     Riparazioni.query.filter_by(targamezzo=i.targa).delete()
                     Mezzi.query.filter_by(targa=i.targa).delete()
                     db.session.commit()
                     lista = Riparazioni.query.all()
+                    if len(lista)==0:
+                        frase="Nessun Riparazione Trovata"
                     lista1 = Mezzi.query.all()
+                    if len(lista1)==0:
+                        frase+="Nessun Mezzo Trovato"
                     lista2 = Clienti.query.all()
-                    return render_template("gestionale.html", controllo=3, listariparazioni=lista, listamezzi=lista1, listaclienti=lista2)
+                    if len(lista2)==0:
+                        frase+="Nessun Cliente Trovato"
+                    return render_template("gestionale.html", controllo=3, listariparazioni=lista, listamezzi=lista1, listaclienti=lista2, frase=frase)
 
             cfs = Clienti.query.all()
             for i in cfs:
@@ -466,7 +515,7 @@ def gestionale():
                     cliente.email = request.form[str(i.cf) + "email"]
                     db.session.commit()
                     lista = Clienti.query.all()
-                    return render_template("gestionale.html", controllo=2, listaclienti=lista)
+                    return render_template("gestionale.html", controllo=2, listaclienti=lista, frase="")
                 elif strdelete in request.form:
                     targhe = Mezzi.query.filter_by(cfcliente=i.cf).all()
                     for x in targhe:
@@ -475,7 +524,9 @@ def gestionale():
                     Clienti.query.filter_by(cf=i.cf).delete()
                     db.session.commit()
                     lista = Clienti.query.all()
-                    return render_template("gestionale.html", controllo=2, listaclienti=lista)
+                    if len(lista)==0:
+                        frase="Nessun Cliente Trovato"
+                    return render_template("gestionale.html", controllo=2, listaclienti=lista, frase=frase)
                 elif strcompleto in request.form:
                     cfin = strcompleto[:-1]
                     cliente = Clienti.query.filter_by(cf=cfin).first()
@@ -485,9 +536,15 @@ def gestionale():
                     cliente.email = request.form[cfin + "email3"]
                     db.session.commit()
                     lista = Riparazioni.query.all()
+                    if len(lista)==0:
+                        frase="Nessun Riparazione Trovata"
                     lista1 = Mezzi.query.all()
+                    if len(lista1)==0:
+                        frase+="Nessun Mezzo Trovato"
                     lista2 = Clienti.query.all()
-                    return render_template("gestionale.html", controllo=3, listariparazioni=lista, listamezzi=lista1, listaclienti=lista2)
+                    if len(lista2)==0:
+                        frase+="Nessun Cliente Trovato"
+                    return render_template("gestionale.html", controllo=3, listariparazioni=lista, listamezzi=lista1, listaclienti=lista2, frase=frase)
                 elif strdelete + "3" in request.form:
                     targhe = Mezzi.query.filter_by(cfcliente=i.cf).all()
                     for x in targhe:
@@ -496,9 +553,15 @@ def gestionale():
                     Clienti.query.filter_by(cf=i.cf).delete()
                     db.session.commit()
                     lista = Riparazioni.query.all()
+                    if len(lista)==0:
+                        frase="Nessun Riparazione Trovata"
                     lista1 = Mezzi.query.all()
+                    if len(lista1)==0:
+                        frase+="Nessun Mezzo Trovato"
                     lista2 = Clienti.query.all()
-                    return render_template("gestionale.html", controllo=3, listariparazioni=lista, listamezzi=lista1, listaclienti=lista2)
+                    if len(lista2)==0:
+                        frase+="Nessun Cliente Trovato"
+                    return render_template("gestionale.html", controllo=3, listariparazioni=lista, listamezzi=lista1, listaclienti=lista2, frase=frase)
             return render_template("gestionale.html")
 
         else:
@@ -513,18 +576,17 @@ def aggiuntariparazioni():
         tz = pytz.timezone("Europe/Rome")
         listamezzi = Mezzi.query.all()
         if request.method == "POST":
-            stato = False
             inizio = datetime.now(tz)
             fine = "in corso..."
             prezzo = request.form["prezzo"]
             descrizione = request.form["descrizione"]
             targamezzo = request.form["targamezzo"]
-            riparazione = Riparazioni(stato, inizio, fine, prezzo, descrizione, targamezzo)
+            riparazione = Riparazioni(inizio, fine, prezzo, descrizione, targamezzo)
             db.session.add(riparazione)
             db.session.commit()
-            return render_template("addriparazioni.html", lista=listamezzi, frase="aggiunto")
+            return render_template("addriparazioni.html", lista=listamezzi, frase="Nuova Riparazione Aggiunta")
         else:
-            return render_template("addriparazioni.html", lista=listamezzi)
+            return render_template("addriparazioni.html", lista=listamezzi, frase="")
     else:
         return redirect(url_for("home"))
 
@@ -534,6 +596,7 @@ def aggiuntaclienti():
     if "pass" in session:
         if request.method == "POST":
             cf = request.form["cf"]
+            cf = cf.upper()
             nome = request.form["nome"]
             cognome = request.form["cognome"]
             ntelefono = request.form["ntelefono"]
@@ -541,14 +604,15 @@ def aggiuntaclienti():
             password = None
             check_cliente = Clienti.query.filter_by(cf=cf).first()
             if check_cliente:
-                return render_template("addclienti.html", frase="cf già inserito")
+                return render_template("addclienti.html", frase="E' già presente un cliente con questo CF")
             else:
                 cliente = Clienti(cf, nome, cognome, ntelefono, email, password)
                 db.session.add(cliente)
                 db.session.commit()
-                return render_template("addclienti.html", frase="aggiunto")
+                addlog("Aggiunto un Cliente")
+                return render_template("addclienti.html", frase="Nuovo Cliente Aggiunto")
         else:
-            return render_template("addclienti.html")
+            return render_template("addclienti.html", frase="")
     else:
         return redirect(url_for("home"))
 
@@ -559,6 +623,7 @@ def aggiuntamezzi():
         listaclienti = Clienti.query.all()
         if request.method == "POST":
             targa = request.form["targa"]
+            targa = targa.upper()
             marca = request.form["marca"]
             modello = request.form["modello"]
             cilindrata = request.form["cilindrata"]
@@ -568,15 +633,15 @@ def aggiuntamezzi():
                 return redirect(url_for("aggiuntaclienti"))
             check_mezzo = Mezzi.query.filter_by(targa=targa).first()
             if check_mezzo:
-                return render_template("addmezzi.html", lista=listaclienti, frase="targa già inserita")
+                return render_template("addmezzi.html", lista=listaclienti, frase="E' già presente un mezzo con questa Targa")
             else:
                 mezzo = Mezzi(targa, marca, modello, cilindrata, potenza, cfcliente)
                 db.session.add(mezzo)
                 db.session.commit()
-                return render_template("addmezzi.html", lista=listaclienti, frase="aggiunto")
+                return render_template("addmezzi.html", lista=listaclienti, frase="Nuovo Mezzo Aggiunto")
         else:
 
-            return render_template("addmezzi.html", lista=listaclienti)
+            return render_template("addmezzi.html", lista=listaclienti, frase="")
     else:
         return redirect(url_for("home"))
 

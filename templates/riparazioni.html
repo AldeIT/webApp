@@ -2,21 +2,52 @@
 {% block title%}Riparazioni{% endblock %}
 {% block pagecontent %}
 <center>
-<h1>Riparazioni in corso</h1>
+<h1 class="titoli">Riparazioni in corso</h1>
 <br>
-{% for item in listariparazioniincorso%}
-<div class="card">
-  <h3 class="card-header">{{item.descrizione}}</h3>
-  <div class="card-body">
-    <p class="card-text">Proprietario: {{item.cognome}} {{item.nome}}</p>
-    <p class="card-text">Mezzo: {{item.marca}} {{item.modello}}</p>
-    <p class="card-text">{{item.inizio}}</p>
-    <form action="" method="post">
-      <input type="submit" name={{item._id}} value="Terminato!">
-    </form>
+<div class="container">
+  <!-- Print in loop dei bottoni/lista di tutte le Riparazioni -->
+  <div class="list-group">
+  {% for item in listariparazioniincorso%}
+    {% if item==listariparazioniincorso[-1]%}
+    <span class="border-primary scrittebase"><button type="button" class="border-0 rounded-0 list-group-item list-group-item-action scrittebase" data-toggle="modal" data-target="#{{item.inizio}}">{{item.descrizione}} <b>|</b> {{item.marca}} {{item.modello}} <b>|</b> {{item.cognome}} {{item.nome}}</button></span>
+    {% else %}
+    <span class="border-bottom border-primary scrittebase"><button type="button" class="border-0 rounded-0 list-group-item list-group-item-action scrittebase" data-toggle="modal" data-target="#{{item.inizio}}">{{item.descrizione}} <b>|</b> {{item.marca}} {{item.modello}} <b>|</b> {{item.cognome}} {{item.nome}}</button></span>
+    {% endif %}
+  {%endfor%}
   </div>
+
+  <!-- print dei Modal di ogni Riparazione-->
+  {% for item in listariparazioniincorso%}
+  <div class="modal fade bd-example-modal-lg" id="{{item.inizio}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title scrittebase" id="exampleModalLongTitle">{{item.descrizione}}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body scrittebase">
+          <p>Proprietario: {{item.cognome}} {{item.nome}}</p>
+          <p>Mezzo: {{item.marca}} {{item.modello}}</p>
+          <p>Data inizio: {{item.inizio[0:16]}}</p>
+        </div>
+        <div class="modal-footer">
+          <form action="" method="post">
+            <button type="button" class="btn btn-danger scrittebase" data-dismiss="modal">Close</button>
+            <button name={{item._id}} type="submit" class="btn btn-primary scrittebase">Terminato!</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {%endfor%}
+
 </div>
-<br>
-{%endfor%}
+{% if frase!="" %}
+<div class="card text-white bg-danger mb-3" style="max-width: 18rem;">
+  <div class="card-header scrittebase">{{frase}}</div>
+</div>
+{%endif%}
 </center>
 {%endblock %}

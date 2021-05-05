@@ -1,20 +1,20 @@
 {% extends "template.html" %}
 {% block title %}Aggiungi Mezzi{% endblock %}
 {%  block pagecontent %}
-<h1>Aggiunta Mezzo</h1>
+<br>
 <div class="superiore">
   <div class="card border-dark mb-3">
-    <h4 class="card-header">Nuovo Mezzo</h4>
+    <h4 class="card-header titoli">Nuovo Mezzo</h4>
     <div class="card-body text-dark">
       <form method="POST">
         <div class="form-row">
           <div class="form-group col-md-6">
-            <label for="inputEmail4">Targa</label>
+            <label for="inputEmail4" class="scrittebase">Targa</label>
             <input  name="targa" type="text" class="form-control" required>
           </div>
           <div class="form-group col-md-6">
-            <label for="cf">Cf cliente</label>
-            <select onchange="openPage(this);" name="cfcliente" class="custom-select" id="inputGroupSelect01" required>
+            <label for="cf" class="scrittebase">Cf cliente</label>
+            <select onchange="openPage(this);" name="cfcliente" class="custom-select scrittebase" id="inputGroupSelect01" required>
               <option selected>...</option>
               {% for item in lista %}
               <option>{{item.cf}}</option>
@@ -26,33 +26,48 @@
 
         <div class="form-row">
           <div class="form-group col-md-6">
-            <label for="marca">Marca</label>
-            <input  name="marca" type="text" class="form-control" required>
+            <label for="marca" class="scrittebase">Marca</label>
+            <input  name="marca" type="text" class="form-control scrittebase" required>
           </div>
           <div class="form-group col-md-6">
-            <label for="modello">Modello</label>
-            <input name="modello" type="text" class="form-control" required>
+            <label for="modello" class="scrittebase">Modello</label>
+            <input name="modello" type="text" class="form-control scrittebase" required>
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group col-md-6">
-            <label for="cilindrata">Cilindrata</label>
-            <input  name="cilindrata" type="text" class="form-control" required>
+            <label for="cilindrata" class="scrittebase">Cilindrata</label>
+            <input  name="cilindrata" type="text" class="form-control scrittebase" required>
           </div>
           <div class="form-group col-md-6">
-            <label for="potenza">Potenza</label>
-            <input name="potenza" type="text" class="form-control" required>
+            <label for="potenza" class="scrittebase">Potenza</label>
+            <input name="potenza" type="text" class="form-control scrittebase" required>
           </div>
         </div>
         <br>
         <center>
-        <input name="sub" class="btn btn-primary btn-outline-primary btn-lg" type="submit" value="Aggiungi">
+        <input name="sub" class="btn btn-primary btn-outline-primary btn-lg scrittebase" type="submit" value="Aggiungi">
         </center>
         <br>
       </form>
     </div>
   </div>
 </div>
+<center>
+{% if frase!="" %}
+{% if frase=="Nuovo Mezzo Aggiunto"%}
+<div class="card text-white bg-primary mb-3 scrittebase" style="max-width: 18rem;">
+  <div class="card-header">{{frase}}</div>
+</div>
+<br>
+{%else%}
+<div class="card text-white bg-danger mb-3 scrittebase" style="max-width: 18rem;">
+  <div class="card-header">{{frase}}</div>
+</div>
+<br>
+{%endif%}
+
+{%endif%}
 </center>
 {% endblock %}

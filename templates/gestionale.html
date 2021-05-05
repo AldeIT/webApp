@@ -4,20 +4,20 @@
 {% set dev = namespace(value=0) %}
 {% set dev1 = namespace(value=0) %}
 {% set dev2 = namespace(value=0) %}
-<h1>Gestionale</h1>
+<h1 class="titoli">Gestionale</h1>
 <br>
 <center>
   <div class="superioregestionale">
     <form class="" action="" method="POST">
       <div class="input-group">
-        <select name="scelta" class="custom-select" id="inputGroupSelect04">
+        <select name="scelta" class="custom-select scrittebase border-dark" id="inputGroupSelect04">
           <option selected>Completo</option>
           <option>Riparazioni</option>
           <option>Mezzi</option>
           <option>Clienti</option>
         </select>
         <div class="input-group-append">
-          <button name="sub" class="btn btn-outline-primary" type="submit">Mostra</button>
+          <button name="sub" class="btn btn-outline-primary scrittebase sis" type="submit">Mostra</button>
         </div>
       </div>
     </form>
@@ -26,20 +26,20 @@
 <br>
 {% if controllo==0 %}
 <div class="superioregestionale">
-  <div class="card border-dark mb-3">
-    <h4 class="card-header">Riparazioni</h4>
-    <div class="card-body text-dark">
+  <div class="card border-dark text-black bg-white mb-3">
+    <h4 class="card-header bg-primary text-white titoli">Riparazioni</h4>
+    <div class="card-body bg-white text-dark">
       {% for item in listariparazioni %}
         <form method="POST">
           <div class="form-row">
             <div class="form-group col-md-2">
               {%if dev.value==0%}
-                <label for="inlineFormCustomSelect">Stato</label>
+                <label for="inlineFormCustomSelect" class="scrittebase">Stato</label>
               {%else%}
-                <label class="sr-only" for="inlineFormCustomSelect">Stato</label>
+                <label class="sr-only scrittebase" for="inlineFormCustomSelect">Stato</label>
               {%endif%}
-              <select name={{item._id ~ "stato"}} class="custom-select mr-sm-2" id="inlineFormCustomSelect">
-                {% if item.stato %}
+              <select name={{item._id ~ "stato"}} class="custom-select mr-sm-2 scrittebase" id="inlineFormCustomSelect">
+                {% if item.fine!="in corso..." %}
                 <option selected>Terminato</option>
                 <option>In corso</option>
                 {% else %}
@@ -51,25 +51,25 @@
 
             <div class="form-group col-md-6">
               {%if dev.value==0%}
-                <label for="inlineFormInputName2">Descrizione</label>
+                <label for="inlineFormInputName2" class="scrittebase">Descrizione</label>
               {%else%}
-                <label class="sr-only" for="inlineFormInputName2">Descrizione</label>
+                <label class="sr-only scrittebase" for="inlineFormInputName2">Descrizione</label>
               {%endif%}
-              <input value="{{item.descrizione}}" name={{item._id ~ "descrizione"}} type="text" class="form-control mb-2 mr-sm-2">
+              <input value="{{item.descrizione}}" name={{item._id ~ "descrizione"}} type="text" class="form-control mb-2 mr-sm-2 scrittebase">
             </div>
 
             <div class="form-group col-md-1">
               {%if dev.value==0%}
-                <label for="inlineFormInputName2">Prezzo</label>
+                <label for="inlineFormInputName2" class="scrittebase">Prezzo</label>
               {%else%}
-                <label class="sr-only" for="inlineFormInputName2">Prezzo</label>
+                <label class="sr-only scrittebase" for="inlineFormInputName2">Prezzo</label>
               {%endif%}
-              <input value="{{item.prezzo}}" name={{item._id ~ "prezzo"}} type="text" class="form-control mb-2 mr-sm-2">
+              <input value="{{item.prezzo}}" name={{item._id ~ "prezzo"}} type="text" class="form-control mb-2 mr-sm-2 scrittebase">
             </div>
 
-            <div id="ernia" class="form-group col-md-2">
+            <div class="form-group col-md-2">
               {%if dev.value==0%}
-                <label id="john" for="inlineFormInputName2">iiixxx</label>
+                <label id="john" for="inlineFormInputName2">iiiiixxxxx</label>
               {%else%}
                 <label class="sr-only" for="inlineFormInputName2"></label>
               {%endif%}
@@ -78,7 +78,7 @@
 
             <div id="franco" class="form-group col-md-1">
               {%if dev.value==0%}
-                <label id="john" for="inlineFormInputName2">iiixxx</label>
+                <label id="john" for="inlineFormInputName2">iiiiixxxxx</label>
               {%else%}
                 <label class="sr-only" for="inlineFormInputName2"></label>
               {%endif%}
@@ -91,68 +91,72 @@
     </div>
   </div>
 </div>
-
+{% if frase!="" %}
+<div class="card text-white bg-danger mb-3 scrittebase" style="max-width: 18rem;">
+  <div class="card-header">{{frase}}</div>
+</div>
+{%endif%}
 
 {% elif controllo==1 %}
 <div class="superioregestionale">
-  <div class="card border-dark mb-3">
-    <h4 class="card-header">Mezzi</h4>
-    <div class="card-body text-dark">
+  <div class="card border-dark text-black bg-white mb-3">
+    <h4 class="card-header bg-primary text-white titoli">Mezzi</h4>
+    <div class="card-body bg-white text-dark">
       {% for item in listamezzi %}
         <form method="POST">
           <div class="form-row">
             <div class="form-group col-md-3">
               {%if dev1.value==0%}
-                <label for="inlineFormInputName2">Marca</label>
+                <label for="inlineFormInputName2" class="scrittebase">Marca</label>
               {%else%}
-                <label class="sr-only" for="inlineFormInputName2">Marca</label>
+                <label class="sr-only scrittebase" for="inlineFormInputName2">Marca</label>
               {%endif%}
-              <input value="{{item.marca}}" name={{item.targa ~ "marca"}} type="text" class="form-control mb-2 mr-sm-2">
+              <input value="{{item.marca}}" name={{item.targa ~ "marca"}} type="text" class="form-control mb-2 mr-sm-2 scrittebase">
             </div>
 
             <div class="form-group col-md-2">
               {%if dev1.value==0%}
-                <label for="inlineFormInputName2">Modello</label>
+                <label for="inlineFormInputName2" class="scrittebase">Modello</label>
               {%else%}
-                <label class="sr-only" for="inlineFormInputName2">Modello</label>
+                <label class="sr-only scrittebase" for="inlineFormInputName2">Modello</label>
               {%endif%}
-              <input value="{{item.modello}}" name={{item.targa ~ "modello"}} type="text" class="form-control mb-2 mr-sm-2">
+              <input value="{{item.modello}}" name={{item.targa ~ "modello"}} type="text" class="form-control mb-2 mr-sm-2 scrittebase">
             </div>
 
             <div class="form-group col-md-2">
               {%if dev1.value==0%}
-                <label for="inlineFormInputName2">Cilandrata</label>
+                <label for="inlineFormInputName2" class="scrittebase">Cilandrata</label>
               {%else%}
-                <label class="sr-only" for="inlineFormInputName2">Cilindrata</label>
+                <label class="sr-only scrittebase" for="inlineFormInputName2">Cilindrata</label>
               {%endif%}
-              <input value="{{item.cilindrata}}" name={{item.targa ~ "cilindrata"}} type="text" class="form-control mb-2 mr-sm-2">
+              <input value="{{item.cilindrata}}" name={{item.targa ~ "cilindrata"}} type="text" class="form-control mb-2 mr-sm-2 scrittebase">
             </div>
 
             <div class="form-group col-md-2">
               {%if dev1.value==0%}
-                <label for="inlineFormInputName2">Potenza</label>
+                <label for="inlineFormInputName2" class="scrittebase">Potenza</label>
               {%else%}
-                <label class="sr-only" for="inlineFormInputName2">Potenza</label>
+                <label class="sr-only scrittebase" for="inlineFormInputName2">Potenza</label>
               {%endif%}
-              <input value="{{item.potenza}}" name={{item.targa ~ "potenza"}} type="text" class="form-control mb-2 mr-sm-2">
+              <input value="{{item.potenza}}" name={{item.targa ~ "potenza"}} type="text" class="form-control mb-2 mr-sm-2 scrittebase">
             </div>
 
-            <div id="ernia" class="form-group col-md-2">
+            <div class="form-group col-md-2">
               {%if dev1.value==0%}
-                <label id="john" for="inlineFormInputName2">iiixxx</label>
+                <label id="john" for="inlineFormInputName2">iiiiixxxxx</label>
               {%else%}
                 <label class="sr-only" for="inlineFormInputName2"></label>
               {%endif%}
-                <input id="gue" name={{item.targa}} class="btn btn-primary btn-outline-primary" type="submit" value="Conferma modifica">
+                <input id="gue" name={{item.targa}} class="btn btn-primary btn-outline-primary scrittebase" type="submit" value="Conferma modifica">
             </div>
 
             <div id="franco" class="form-group col-md-1">
               {%if dev1.value==0%}
-                <label id="john" for="inlineFormInputName2">iiixxx</label>
+                <label id="john" for="inlineFormInputName2">iiiiixxxxx</label>
               {%else%}
                 <label class="sr-only" for="inlineFormInputName2"></label>
               {%endif%}
-              <input id="paolo" name={{item.targa ~ "delete"}} class="btn btn-outline-danger" type="submit" value="Elimina">
+              <input id="paolo" name={{item.targa ~ "delete"}} class="btn btn-outline-danger scrittebase" type="submit" value="Elimina">
             </div>
           </div>
         </form>
@@ -161,68 +165,72 @@
     </div>
   </div>
 </div>
-
+{% if frase!="" %}
+<div class="card text-white bg-danger mb-3 scrittebase" style="max-width: 18rem;">
+  <div class="card-header">{{frase}}</div>
+</div>
+{%endif%}
 
 {% elif controllo==2 %}
 <div class="superioregestionale">
-  <div class="card border-dark mb-3">
-    <h4 class="card-header">Clienti</h4>
-    <div class="card-body text-dark">
+  <div class="card border-dark text-black bg-white mb-3">
+    <h4 class="card-header bg-primary text-white titoli">Clienti</h4>
+    <div class="card-body bg-white text-dark">
       {% for item in listaclienti %}
         <form method="POST">
           <div class="form-row">
             <div class="form-group col-md-2">
               {%if dev2.value==0%}
-                <label for="inlineFormInputName2">Nome</label>
+                <label for="inlineFormInputName2" class="scrittebase">Nome</label>
               {%else%}
-                <label class="sr-only" for="inlineFormInputName2">Nome</label>
+                <label class="sr-only scrittebase" for="inlineFormInputName2">Nome</label>
               {%endif%}
-              <input value="{{item.nome}}" name={{item.cf ~ "nome"}} type="text" class="form-control mb-2 mr-sm-2">
+              <input value="{{item.nome}}" name={{item.cf ~ "nome"}} type="text" class="form-control mb-2 mr-sm-2 scrittebase">
             </div>
 
             <div class="form-group col-md-2">
               {%if dev2.value==0%}
-                <label for="inlineFormInputName2">Cognome</label>
+                <label for="inlineFormInputName2" class="scrittebase">Cognome</label>
               {%else%}
-                <label class="sr-only" for="inlineFormInputName2">Cognome</label>
+                <label class="sr-only scrittebase" for="inlineFormInputName2">Cognome</label>
               {%endif%}
-              <input value="{{item.cognome}}" name={{item.cf ~ "cognome"}} type="text" class="form-control mb-2 mr-sm-2">
+              <input value="{{item.cognome}}" name={{item.cf ~ "cognome"}} type="text" class="form-control mb-2 mr-sm-2 scrittebase">
             </div>
 
             <div class="form-group col-md-2">
               {%if dev2.value==0%}
-                <label for="inlineFormInputName2">Numero di telefono</label>
+                <label for="inlineFormInputName2" class="scrittebase">Numero di telefono</label>
               {%else%}
-                <label class="sr-only" for="inlineFormInputName2">Numero di telefono</label>
+                <label class="sr-only scrittebase" for="inlineFormInputName2">Numero di telefono</label>
               {%endif%}
-              <input value="{{item.ntelefono}}" name={{item.cf ~ "ntelefono"}} type="text" class="form-control mb-2 mr-sm-2">
+              <input value="{{item.ntelefono}}" name={{item.cf ~ "ntelefono"}} type="text" class="form-control mb-2 mr-sm-2 scrittebase">
             </div>
 
             <div class="form-group col-md-3">
               {%if dev2.value==0%}
-                <label for="inlineFormInputName2">Email</label>
+                <label for="inlineFormInputName2" class="scrittebase">Email</label>
               {%else%}
-                <label class="sr-only" for="inlineFormInputName2">Email</label>
+                <label class="sr-only scrittebase" for="inlineFormInputName2">Email</label>
               {%endif%}
-              <input value="{{item.email}}" name={{item.cf ~ "email"}} type="text" class="form-control mb-2 mr-sm-2">
+              <input value="{{item.email}}" name={{item.cf ~ "email"}} type="text" class="form-control mb-2 mr-sm-2 scrittebase">
             </div>
 
-            <div id="ernia" class="form-group col-md-2">
+            <div class="form-group col-md-2">
               {%if dev2.value==0%}
-                <label id="john" for="inlineFormInputName2">iiixxx</label>
+                <label id="john" for="inlineFormInputName2">iiiiixxxxx</label>
               {%else%}
                 <label class="sr-only" for="inlineFormInputName2"></label>
               {%endif%}
-                <input id="gue" name={{item.cf}} class="btn btn-primary btn-outline-primary" type="submit" value="Conferma modifica">
+                <input id="gue" name={{item.cf}} class="btn btn-primary btn-outline-primary scrittebase" type="submit" value="Conferma modifica">
             </div>
 
             <div id="franco" class="form-group col-md-1">
               {%if dev2.value==0%}
-                <label id="john" for="inlineFormInputName2">iiixxx</label>
+                <label id="john" for="inlineFormInputName2">iiiiixxxxx</label>
               {%else%}
                 <label class="sr-only" for="inlineFormInputName2"></label>
               {%endif%}
-              <input id="paolo" name={{item.cf ~ "delete"}} class="btn btn-outline-danger" type="submit" value="Elimina">
+              <input id="paolo" name={{item.cf ~ "delete"}} class="btn btn-outline-danger scrittebase" type="submit" value="Elimina">
             </div>
           </div>
         </form>
@@ -231,24 +239,28 @@
     </div>
   </div>
 </div>
-
+{% if frase!="" %}
+<div class="card text-white bg-danger mb-3 scrittebase" style="max-width: 18rem;">
+  <div class="card-header">{{frase}}</div>
+</div>
+{%endif%}
 {% elif controllo==3 %}
 
 <div class="superioregestionale">
-  <div class="card border-dark mb-3">
-    <h4 class="card-header">Riparazioni</h4>
-    <div class="card-body text-dark">
+  <div class="card border-dark text-black bg-white mb-3">
+    <h4 class="card-header bg-primary text-white titoli">Riparazioni</h4>
+    <div class="card-body bg-white text-dark">
       {% for item in listariparazioni %}
         <form method="POST">
           <div class="form-row">
             <div class="form-group col-md-2">
               {%if dev.value==0%}
-                <label for="inlineFormCustomSelect">Stato</label>
+                <label for="inlineFormCustomSelect" class="scrittebase">Stato</label>
               {%else%}
-                <label class="sr-only" for="inlineFormCustomSelect">Stato</label>
+                <label class="sr-only scrittebase" for="inlineFormCustomSelect">Stato</label>
               {%endif%}
-              <select name={{item._id ~ "stato3"}} class="custom-select mr-sm-2" id="inlineFormCustomSelect">
-                {% if item.stato %}
+              <select name={{item._id ~ "stato3"}} class="custom-select mr-sm-2 scrittebase" id="inlineFormCustomSelect">
+                {% if item.fine!="in corso..." %}
                 <option selected>Terminato</option>
                 <option>In corso</option>
                 {% else %}
@@ -260,38 +272,38 @@
 
             <div class="form-group col-md-6">
               {%if dev.value==0%}
-                <label for="inlineFormInputName2">Descrizione</label>
+                <label for="inlineFormInputName2" class="scrittebase">Descrizione</label>
               {%else%}
-                <label class="sr-only" for="inlineFormInputName2">Descrizione</label>
+                <label class="sr-only scrittebase" for="inlineFormInputName2">Descrizione</label>
               {%endif%}
-              <input value="{{item.descrizione}}" name={{item._id ~ "descrizione3"}} type="text" class="form-control mb-2 mr-sm-2">
+              <input value="{{item.descrizione}}" name={{item._id ~ "descrizione3"}} type="text" class="form-control mb-2 mr-sm-2 scrittebase">
             </div>
 
             <div class="form-group col-md-1">
               {%if dev.value==0%}
-                <label for="inlineFormInputName2">Prezzo</label>
+                <label for="inlineFormInputName2" class="scrittebase">Prezzo</label>
               {%else%}
-                <label class="sr-only" for="inlineFormInputName2">Prezzo</label>
+                <label class="sr-only scrittebase" for="inlineFormInputName2">Prezzo</label>
               {%endif%}
-              <input value="{{item.prezzo}}" name={{item._id ~ "prezzo3"}} type="text" class="form-control mb-2 mr-sm-2">
+              <input value="{{item.prezzo}}" name={{item._id ~ "prezzo3"}} type="text" class="form-control mb-2 mr-sm-2 scrittebase">
             </div>
 
-            <div id="ernia" class="form-group col-md-2">
+            <div class="form-group col-md-2">
               {%if dev.value==0%}
-                <label id="john" for="inlineFormInputName2">iiixxx</label>
+                <label id="john" for="inlineFormInputName2">iiiiixxxxx</label>
               {%else%}
                 <label class="sr-only" for="inlineFormInputName2"></label>
               {%endif%}
-                <input id="gue" name={{item._id ~ "3"}} class="btn btn-primary btn-outline-primary" type="submit" value="Conferma modifica">
+                <input id="gue" name={{item._id ~ "3"}} class="btn btn-primary btn-outline-primary scrittebase" type="submit" value="Conferma modifica">
             </div>
 
             <div id="franco" class="form-group col-md-1">
               {%if dev.value==0%}
-                <label id="john" for="inlineFormInputName2">iiixxx</label>
+                <label id="john" for="inlineFormInputName2">iiiiixxxxx</label>
               {%else%}
                 <label class="sr-only" for="inlineFormInputName2"></label>
               {%endif%}
-              <input id="paolo" name={{item._id ~ "delete3"}} class="btn btn-outline-danger" type="submit" value="Elimina">
+              <input id="paolo" name={{item._id ~ "delete3"}} class="btn btn-outline-danger scrittebase" type="submit" value="Elimina">
             </div>
           </div>
         </form>
@@ -303,64 +315,64 @@
 
 <br>
 <div class="superioregestionale">
-  <div class="card border-dark mb-3">
-    <h4 class="card-header">Mezzi</h4>
-    <div class="card-body text-dark">
+  <div class="card border-dark text-black bg-white mb-3">
+    <h4 class="card-header bg-primary text-white titoli">Mezzi</h4>
+    <div class="card-body bg-white text-dark">
       {% for item in listamezzi %}
         <form method="POST">
           <div class="form-row">
             <div class="form-group col-md-3">
               {%if dev1.value==0%}
-                <label for="inlineFormInputName2">Marca</label>
+                <label for="inlineFormInputName2" class="scrittebase">Marca</label>
               {%else%}
-                <label class="sr-only" for="inlineFormInputName2">Marca</label>
+                <label class="sr-only scrittebase" for="inlineFormInputName2">Marca</label>
               {%endif%}
-              <input value="{{item.marca}}" name={{item.targa ~ "marca3"}} type="text" class="form-control mb-2 mr-sm-2">
+              <input value="{{item.marca}}" name={{item.targa ~ "marca3"}} type="text" class="form-control mb-2 mr-sm-2 scrittebase">
             </div>
 
             <div class="form-group col-md-2">
               {%if dev1.value==0%}
-                <label for="inlineFormInputName2">Modello</label>
+                <label for="inlineFormInputName2" class="scrittebase">Modello</label>
               {%else%}
-                <label class="sr-only" for="inlineFormInputName2">Modello</label>
+                <label class="sr-only scrittebase" for="inlineFormInputName2">Modello</label>
               {%endif%}
-              <input value="{{item.modello}}" name={{item.targa ~ "modello3"}} type="text" class="form-control mb-2 mr-sm-2">
+              <input value="{{item.modello}}" name={{item.targa ~ "modello3"}} type="text" class="form-control mb-2 mr-sm-2 scrittebase">
             </div>
 
             <div class="form-group col-md-2">
               {%if dev1.value==0%}
-                <label for="inlineFormInputName2">Cilandrata</label>
+                <label for="inlineFormInputName2" class="scrittebase">Cilandrata</label>
               {%else%}
-                <label class="sr-only" for="inlineFormInputName2">Cilindrata</label>
+                <label class="sr-only scrittebase" for="inlineFormInputName2">Cilindrata</label>
               {%endif%}
-              <input value="{{item.cilindrata}}" name={{item.targa ~ "cilindrata3"}} type="text" class="form-control mb-2 mr-sm-2">
+              <input value="{{item.cilindrata}}" name={{item.targa ~ "cilindrata3"}} type="text" class="form-control mb-2 mr-sm-2 scrittebase">
             </div>
 
             <div class="form-group col-md-2">
               {%if dev1.value==0%}
-                <label for="inlineFormInputName2">Potenza</label>
+                <label for="inlineFormInputName2" class="scrittebase">Potenza</label>
               {%else%}
-                <label class="sr-only" for="inlineFormInputName2">Potenza</label>
+                <label class="sr-only scrittebase" for="inlineFormInputName2">Potenza</label>
               {%endif%}
-              <input value="{{item.potenza}}" name={{item.targa ~ "potenza3"}} type="text" class="form-control mb-2 mr-sm-2">
+              <input value="{{item.potenza}}" name={{item.targa ~ "potenza3"}} type="text" class="form-control mb-2 mr-sm-2 scrittebase">
             </div>
 
-            <div id="ernia" class="form-group col-md-2">
+            <div class="form-group col-md-2">
               {%if dev1.value==0%}
-                <label id="john" for="inlineFormInputName2">iiixxx</label>
+                <label id="john" for="inlineFormInputName2">iiiiixxxxx</label>
               {%else%}
                 <label class="sr-only" for="inlineFormInputName2"></label>
               {%endif%}
-                <input id="gue" name={{item.targa ~ "3"}} class="btn btn-primary btn-outline-primary" type="submit" value="Conferma modifica">
+                <input id="gue" name={{item.targa ~ "3"}} class="btn btn-primary btn-outline-primary scrittebase" type="submit" value="Conferma modifica">
             </div>
 
             <div id="franco" class="form-group col-md-1">
               {%if dev1.value==0%}
-                <label id="john" for="inlineFormInputName2">iiixxx</label>
+                <label id="john" for="inlineFormInputName2">iiiiixxxxx</label>
               {%else%}
                 <label class="sr-only" for="inlineFormInputName2"></label>
               {%endif%}
-              <input id="paolo" name={{item.targa ~ "delete3"}} class="btn btn-outline-danger" type="submit" value="Elimina">
+              <input id="paolo" name={{item.targa ~ "delete3"}} class="btn btn-outline-danger scrittebase" type="submit" value="Elimina">
             </div>
           </div>
         </form>
@@ -371,64 +383,64 @@
 </div>
 <br>
 <div class="superioregestionale">
-  <div class="card border-dark mb-3">
-    <h4 class="card-header">Clienti</h4>
-    <div class="card-body text-dark">
+  <div class="card border-dark text-black bg-white mb-3">
+    <h4 class="card-header bg-primary text-white titoli">Clienti</h4>
+    <div class="card-body bg-white text-dark">
       {% for item in listaclienti %}
         <form method="POST">
           <div class="form-row">
             <div class="form-group col-md-2">
               {%if dev2.value==0%}
-                <label for="inlineFormInputName2">Nome</label>
+                <label for="inlineFormInputName2" class="scrittebase">Nome</label>
               {%else%}
-                <label class="sr-only" for="inlineFormInputName2">Nome</label>
+                <label class="sr-only scrittebase" for="inlineFormInputName2">Nome</label>
               {%endif%}
-              <input value="{{item.nome}}" name={{item.cf ~ "nome3"}} type="text" class="form-control mb-2 mr-sm-2">
+              <input value="{{item.nome}}" name={{item.cf ~ "nome3"}} type="text" class="form-control mb-2 mr-sm-2 scrittebase">
             </div>
 
             <div class="form-group col-md-2">
               {%if dev2.value==0%}
-                <label for="inlineFormInputName2">Cognome</label>
+                <label for="inlineFormInputName2" class="scrittebase">Cognome</label>
               {%else%}
-                <label class="sr-only" for="inlineFormInputName2">Cognome</label>
+                <label class="sr-only scrittebase" for="inlineFormInputName2">Cognome</label>
               {%endif%}
-              <input value="{{item.cognome}}" name={{item.cf ~ "cognome3"}} type="text" class="form-control mb-2 mr-sm-2">
+              <input value="{{item.cognome}}" name={{item.cf ~ "cognome3"}} type="text" class="form-control mb-2 mr-sm-2 scrittebase">
             </div>
 
             <div class="form-group col-md-2">
               {%if dev2.value==0%}
-                <label for="inlineFormInputName2">Numero di telefono</label>
+                <label for="inlineFormInputName2" class="scrittebase">Numero di telefono</label>
               {%else%}
-                <label class="sr-only" for="inlineFormInputName2">Numero di telefono</label>
+                <label class="sr-only scrittebase" for="inlineFormInputName2">Numero di telefono</label>
               {%endif%}
-              <input value="{{item.ntelefono}}" name={{item.cf ~ "ntelefono3"}} type="text" class="form-control mb-2 mr-sm-2">
+              <input value="{{item.ntelefono}}" name={{item.cf ~ "ntelefono3"}} type="text" class="form-control mb-2 mr-sm-2 scrittebase">
             </div>
 
             <div class="form-group col-md-3">
               {%if dev2.value==0%}
-                <label for="inlineFormInputName2">Email</label>
+                <label for="inlineFormInputName2" class="scrittebase">Email</label>
               {%else%}
-                <label class="sr-only" for="inlineFormInputName2">Email</label>
+                <label class="sr-only scrittebase" for="inlineFormInputName2">Email</label>
               {%endif%}
-              <input value="{{item.email}}" name={{item.cf ~ "email3"}} type="text" class="form-control mb-2 mr-sm-2">
+              <input value="{{item.email}}" name={{item.cf ~ "email3"}} type="text" class="form-control mb-2 mr-sm-2 scrittebase">
             </div>
 
-            <div id="ernia" class="form-group col-md-2">
+            <div class="form-group col-md-2">
               {%if dev2.value==0%}
-                <label id="john" for="inlineFormInputName2">iiixxx</label>
+                <label id="john" for="inlineFormInputName2">iiiiixxxxx</label>
               {%else%}
                 <label class="sr-only" for="inlineFormInputName2"></label>
               {%endif%}
-                <input id="gue" name={{item.cf ~ "3"}} class="btn btn-primary btn-outline-primary" type="submit" value="Conferma modifica">
+                <input id="gue" name={{item.cf ~ "3"}} class="btn btn-primary btn-outline-primary scrittebase" type="submit" value="Conferma modifica">
             </div>
 
             <div id="franco" class="form-group col-md-1">
               {%if dev2.value==0%}
-                <label id="john" for="inlineFormInputName2">iiixxx</label>
+                <label id="john" for="inlineFormInputName2">iiiiixxxxx</label>
               {%else%}
                 <label class="sr-only" for="inlineFormInputName2"></label>
               {%endif%}
-              <input id="paolo" name={{item.cf ~ "delete3"}} class="btn btn-outline-danger" type="submit" value="Elimina">
+              <input id="paolo" name={{item.cf ~ "delete3"}} class="btn btn-outline-danger scrittebase" type="submit" value="Elimina">
             </div>
           </div>
         </form>
@@ -437,6 +449,12 @@
     </div>
   </div>
 </div>
+<a href="{{ url_for('static', filename="blank.pdf") }}">File</a>
 
+{% if frase!="" %}
+<div class="card text-white bg-danger mb-3 scrittebase" style="max-width: 18rem;">
+  <div class="card-header">{{frase}}</div>
+</div>
+{%endif%}
 {% endif %}
 {% endblock %}

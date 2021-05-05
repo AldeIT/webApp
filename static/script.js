@@ -1,3 +1,4 @@
+
 function openPage(obj){
   if (obj.value=="Aggiungi CF"){
     window.open("/aggiuntaclienti", "_self")

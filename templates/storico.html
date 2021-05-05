@@ -1,109 +1,216 @@
 {% extends "template.html" %}
 {% block title%}Home{% endblock %}
 {% block pagecontent %}
-<center>
-<h1>Storico</h1>
+{% set dev = namespace(value=1) %}
+{% set dev1 = namespace(value=1) %}
+{% set dev2 = namespace(value=1) %}
 
-<form class="" action="" method="POST">
-  <table>
-    <tr>
-    <td><p>Cerca tramite</p></td>
-    <td><select name="scelta" class="form-select" id="inputGroupSelect01">
-    <option selected>Seleziona</option>
-    <option>CF</option>
-    <option>Targa</option>
-    </select></td>
-    <td><input type="text" name="ricerca" value=""></td>
-    </tr>
-    </table>
-    <input type="submit" name="sub" value="Cerca">
-</form>
-<p>{{frase}}</p>
+<center>
+<h1 class="titoli">Storico</h1>
 <br>
+<div class="superiore">
+  <form class="" action="" method="post">
+    <div class="input-group">
+      <input name="ricerca" type="text" class="form-control scrittebase" placeholder="Ricerca">
+    <div class="input-group-append">
+      <select name="scelta" class="custom-select scrittebase" id="inputGroupSelect04">
+        <option selected>Seleziona</option>
+        <option>CF</option>
+        <option>Targa</option>
+      </select>
+    </div>
+    <div class="input-group-append">
+      <button class="btn btn-outline-primary scrittebase" type="submit">Cerca</button>
+    </div>
+  </div>
+  </form>
+</div>
+<br>
+<!-- print in caso di nessun record presente -->
+{% if frase=="Nessun Record Trovato" %}
+<div class="card text-white bg-danger mb-3" style="max-width: 18rem;">
+  <div class="card-header scrittebase">{{frase}}</div>
+</div>
+{%endif%}
+<!-- stampa delle riparazioni  -->
 {% if controllo==0%}
 <h2>Riparazioni</h2>
+<br>
 {% for item in listariparazioni %}
-<div class="shadowbox-center">
-<p><b>Riparazione:</b></p>
-<p>Descrizione: {{item.descrizione}}</p>
-<p>Stato: {{item.stato}}</p>
-<p>Inizio: {{item.inizio}}</p>
-<p>Fine: {{item.fine}}</p>
-<p>Prezzo: {{item.prezzo}}</p>
-<p>Targa: {{item.targamezzo}}</p>
-</div><br>
+{% if (dev.value-1) % 3==0%}
+<div class="card-columns" style="width:90%;">
+{% endif %}
+  <div class="card text-white bg-primary mb-3" style="width: 100%; height: 18rem;">
+    <div class="card-header bg-primary titoli">Riparazione</div>
+    <div class="card-body bg-white">
+      <h5 class="card-title scrittebase">{{item.descrizione}}</h5>
+      <p class="card-text scrittebase">Inizio: {{item.inizio[0:16]}}</p>
+      <p class="card-text scrittebase">Fine: {{item.fine[0:16]}}</p>
+      <p class="card-text scrittebase">Prezzo: {{item.prezzo}}</p>
+      <p class="card-text scrittebase">Targa: {{item.targamezzo}}</p>
+    </div>
+  </div>
+{% if dev.value % 3==0 and dev.value!=0 or item==listariparazioni[-1]%}
+</div>
+{% endif %}
+{% set dev.value = dev.value + 1 %}
 {% endfor %}
-<br><br>
+<br>
+<!-- print dei mezzi -->
 <h2>Mezzi</h2>
 {% for item in listamezzi %}
-<div class="shadowbox-center">
-<p><b>Veicolo:</b></p>
-<p>Targa: {{item.targa}}</p>
-<p>Marca: {{item.marca}}</p>
-<p>Modello: {{item.modello}}</p>
-<p>Cilindrata: {{item.cilindrata}}</p>
-<p>Potenza: {{item.potenza}}</p>
-<p>Proprietario: {{item.cfcliente}}</p>
-</div><br>
+{% if (dev1.value-1) % 3==0%}
+<div class="card-columns" style="width:90%;">
+{% endif %}
+  <div class="card text-white bg-primary mb-3" style="width: 100%; height: 19rem">
+    <div class="card-header titoli">Mezzo</div>
+    <div class="card-body">
+      <h5 class="card-title scrittebase">{{item.targa}}</h5>
+      <p class="card-text scrittebase">Marca: {{item.marca}}</p>
+      <p class="card-text scrittebase">Modello: {{item.modello}}</p>
+      <p class="card-text scrittebase">Cilindrata: {{item.cilindrata}}cc</p>
+      <p class="card-text scrittebase">Potenza: {{item.potenza}} CV</p>
+      <p class="card-text scrittebase">Proprietario: {{item.cfcliente}}</p>
+    </div>
+  </div>
+{% if dev1.value % 3==0 and dev1.value!=0 or item==listamezzi[-1]%}
+</div>
+{% endif %}
+{% set dev1.value = dev1.value + 1 %}
 {% endfor %}
-<br><br>
+<br>
+<!-- print dei clienti -->
 <h2>Clienti</h2>
 {% for item in listaclienti %}
-<div class="shadowbox-center">
-<p><b>Cliente:</b></p>
-<p>Codice Fiscale: {{item.cf}}</p>
-<p>Nome: {{item.nome}}</p>
-<p>Cognome: {{item.cognome}}</p>
-<p>Numero di telefono: {{item.ntelefono}}</p>
-<p>Email: {{item.email}}</p>
-</div><br>
+{% if (dev2.value-1) % 3==0%}
+<div class="card-columns" style="width:90%;">
+{% endif %}
+  <div class="card text-white bg-primary mb-3" style="width: 100%; height: 18rem">
+    <div class="card-header titoli">Cliente</div>
+    <div class="card-body">
+      <h5 class="card-title scrittebase">{{item.cf}}</h5>
+      <p class="card-text scrittebase">Nome: {{item.nome}}</p>
+      <p class="card-text scrittebase">Cognome: {{item.cognome}}</p>
+      <p class="card-text scrittebase">Numero di Telefono: {{item.ntelefono}}</p>
+      <p class="card-text scrittebase">Email: {{item.email}}</p>
+    </div>
+  </div>
+{% if dev2.value % 3==0 and dev2.value!=0 or item==listaclienti[-1]%}
+</div>
+{% endif %}
+{% set dev2.value = dev2.value + 1 %}
 {% endfor %}
-<br><br>
-{% elif controllo==1 %}
-{% for item in listariparazioni %}
-<div class="shadowbox-center">
-<p><b>Riparazione:</b></p>
-<p>Descrizione: {{item.descrizione}}</p>
-<p>Stato: {{item.stato}}</p>
-<p>Inizio: {{item.inizio}}</p>
-<p>Fine: {{item.fine}}</p>
-<p>Prezzo: {{item.prezzo}}</p>
-<p>Targa: {{item.targamezzo}}</p>
-</div><br>
-{% endfor %}
-{% for item in listamacchine %}
-<div class="shadowbox-center">
-<p><b>Veicolo:</b></p>
-<p>Targa: {{item.targa}}</p>
-<p>Marca: {{item.marca}}</p>
-<p>Modello: {{item.modello}}</p>
-<p>Cilindrata: {{item.cilindrata}}</p>
-<p>Potenza: {{item.potenza}}</p>
-<p>Proprietario: {{item.cfcliente}}</p>
-</div><br>
-{% endfor %}
-{%elif controllo==2%}
-{% for item in listariparazioni %}
-<div class="shadowbox-center">
-<p><b>Riparazione:</b></p>
-<p>Descrizione: {{item.descrizione}}</p>
-<p>Stato: {{item.stato}}</p>
-<p>Inizio: {{item.inizio}}</p>
-<p>Fine: {{item.fine}}</p>
-<p>Prezzo: {{item.prezzo}}</p>
-<p>Targa: {{item.targamezzo}}</p>
-</div><br>
-{% endfor %}
-{% for item in listaproprietari %}
-<div class="shadowbox-center">
-<p><b>Proprietario:</b></p>
-<p>Codice Fiscale: {{item.cf}}</p>
-<p>Nome: {{item.nome}}</p>
-<p>Cognome: {{item.cognome}}</p>
-<p>Numero di telefono: {{item.ntelefono}}</p>
-<p>Email: {{item.email}}</p>
-</div><br>
-{% endfor %}
+<br>
+<!-- print in caso di no record -->
+{% if frase=="Nessun Record Trovato" %}
+<div class="card text-white bg-danger mb-3" style="max-width: 18rem;">
+  <div class="card-header scrittebase">{{frase}}</div>
+</div>
 {%endif%}
-<center>
+
+<!-- ricerca in base al cv -->
+{% elif controllo==1 %}
+{% set dev3 = namespace(value=1) %}
+<div class="card-columns" style="width:90%;">
+{% for item in listariparazioni %}
+  <div class="card text-white bg-primary mb-3" style="width: 100%; height: 19rem;">
+    <div class="card-header titoli">Riparazione</div>
+    <div class="card-body">
+      <h5 class="card-title scrittebase">{{item.descrizione}}</h5>
+      <p class="card-text scrittebase">Inizio: {{item.inizio[0:16]}}</p>
+      <p class="card-text scrittebase">Fine: {{item.fine[0:16]}}</p>
+      <p class="card-text scrittebase">Prezzo: {{item.prezzo}}</p>
+      <p class="card-text scrittebase">Targa: {{item.targamezzo}}</p>
+    </div>
+  </div>
+<br>
+{% if dev3.value % 3==0 and dev3.value!=0%}
+</div>
+<div class="card-columns" style="width:90%;">
+{%endif%}
+{% set dev3.value = dev3.value + 1 %}
+{% endfor %}
+{% set dev3.value = dev3.value - 1 %}
+{% for item in listamacchine %}
+{% if dev3.value % 3==0 and dev3.value!=0%}
+</div>
+<div class="card-columns" style="width:90%;">
+{%endif%}
+  <div class="card text-white bg-primary mb-3" style="width: 100%; height: 19rem">
+    <div class="card-header titoli">Mezzo</div>
+    <div class="card-body">
+      <h5 class="card-title scrittebase">{{item.targa}}</h5>
+      <p class="card-text scrittebase">Marca: {{item.marca}}</p>
+      <p class="card-text scrittebase">Modello: {{item.modello}}</p>
+      <p class="card-text scrittebase">Cilindrata: {{item.cilindrata}}cc</p>
+      <p class="card-text scrittebase">Potenza: {{item.potenza}} CV</p>
+      <p class="card-text scrittebase">Proprietario: {{item.cfcliente}}</p>
+    </div>
+  </div>
+<br>
+{% if item==listamacchine[-1]%}
+</div>
+{% endif %}
+{% set dev3.value = dev3.value + 1 %}
+{% endfor %}
+<!-- print in caso di no record -->
+{% if frase=="Nessun Record Trovato" %}
+<div class="card text-white bg-danger mb-3" style="max-width: 18rem;">
+  <div class="card-header scrittebase">{{frase}}</div>
+</div>
+{%endif%}
+
+<!-- ricerca in base alla targa -->
+{%elif controllo==2%}
+{% set dev4= namespace(value=1) %}
+<div class="card-columns" style="width:90%;">
+{% for item in listariparazioni %}
+  <div class="card text-white bg-primary mb-3" style="width: 100%; height: 18rem;">
+    <div class="card-header titoli">Riparazione</div>
+    <div class="card-body">
+      <h5 class="card-title scrittebase">{{item.descrizione}}</h5>
+      <p class="card-text scrittebase">Inizio: {{item.inizio[0:16]}}</p>
+      <p class="card-text scrittebase">Fine: {{item.fine[0:16]}}</p>
+      <p class="card-text scrittebase">Prezzo: {{item.prezzo}}</p>
+      <p class="card-text scrittebase">Targa: {{item.targamezzo}}</p>
+    </div>
+  </div>
+<br>
+{% if dev4.value % 3==0 and dev4.value!=0%}
+</div>
+<div class="card-columns" style="width:90%;">
+{%endif%}
+{% set dev4.value = dev4.value + 1 %}
+{% endfor %}
+{% set dev4.value = dev4.value - 1 %}
+{% for item in listaproprietari %}
+{% if dev4.value % 4==0 and dev4.value!=0%}
+</div>
+<div class="card-columns" style="width:90%;">
+{%endif%}
+  <div class="card text-white bg-primary mb-3" style="width: 100%; height: 18rem">
+    <div class="card-header titoli">Cliente</div>
+    <div class="card-body">
+      <h5 class="card-title scrittebase">{{item.cf}}</h5>
+      <p class="card-text scrittebase">Nome: {{item.nome}}</p>
+      <p class="card-text scrittebase">Cognome: {{item.cognome}}</p>
+      <p class="card-text scrittebase">Numero di Telefono: {{item.ntelefono}}</p>
+      <p class="card-text scrittebase">Email: {{item.email}}</p>
+    </div>
+  </div>
+<br>
+{% if item==listaproprietari[-1]%}
+</div>
+{% endif %}
+{% set dev4.value = dev4.value + 1 %}
+{% endfor %}
+<!-- print in caso di no record -->
+{% if frase=="Nessun Record Trovato" %}
+<div class="card text-white bg-danger mb-3" style="max-width: 18rem;">
+  <div class="card-header scrittebase">{{frase}}</div>
+</div>
+{%endif%}
+{%endif%}
+
+</center>
 {%endblock %}

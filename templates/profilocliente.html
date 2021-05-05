@@ -2,19 +2,32 @@
 {% block title%}Home{% endblock %}
 {% block pagecontent %}
 <center>
-<h1>Esegui l'accesso</h1>
-<div>
-  <p>Nome : {{nome}}</p>
-  <p>Cognome: {{cognome}}</p>
-  <p>Codice Fiscale: {{cf}}</p>
-<form class="" action="" method="post">
-  <p>Email:</p><input type="password" name="n" value="{{email}}">
-  <p>Password:</p><input type="password" name="n" value="{{password}}">
-  <input type="password" name="n" value="" placeholder="Conferma nuova password">
-  <input type="submit" name="sub" value="Accedi">
-</form>
+<h1 class="titoli">Il tuo profilo</h1>
+<br>
+<div class="container">
+  <div class="row">
+    <div class="col-sm">
+        <h5 class="alzati scrittebase">Nome</h5>
+        <h5 class="alzati scrittebase">Cognome</h5>
+        <h5 class="alzati scrittebase">Codice Fiscale</h5>
+        <h5 class="alzati scrittebase">Email</h5>
+        <h5 class="alzati scrittebase">Numero di telefono</h5>
+    </div>
+    <div class="col-sm">
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item scrittebase">{{cliente.nome}}</li>
+        <li class="list-group-item scrittebase">{{cliente.cognome}}</li>
+        <li class="list-group-item scrittebase">{{cliente.cf}}</li>
+        <li class="list-group-item scrittebase">{{cliente.email}}</li>
+        <li class="list-group-item scrittebase">{{cliente.ntelefono}}</li>
+      </ul>
+    </div>
+  </div>
 </div>
 <br>
-<center>
-
-{%endblock %}
+<form class="" action="" method="post">
+  <input name="sub" class="btn btn-primary btn-outline-primary scrittebase" type="submit" value="Modifica profilo">
+</form>
+<br>
+</center>
+{% endblock %}

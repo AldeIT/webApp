@@ -1,0 +1,24 @@
+{% extends "template2.html" %}
+{% block title%}Login{% endblock %}
+{% block pagecontent %}
+<center>
+<h1 class="titoli">Esegui l'accesso</h1>
+<div class="log">
+  <form class="" action="" method="post">
+    <div class="input-group mb-3">
+      <input type="email" class="form-control scrittebase" placeholder="Inserisci la tua email" name="email" aria-describedby="basic-addon2">
+      <div class="input-group-append">
+        <button class="btn btn-outline-primary scrittebase" name="sub" type="submit">Accedi</button>
+      </div>
+    </div>
+  </form>
+</div>
+<br>
+{% if frase=="Email non Trovata" %}
+<div class="card text-white bg-danger mb-3 scrittebase" style="max-width: 18rem;">
+  <div class="card-header">{{frase}}</div>
+</div>
+{%endif%}
+<center>
+
+{%endblock %}

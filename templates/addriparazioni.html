@@ -1,29 +1,29 @@
 {% extends "template.html" %}
 {% block title %}Aggiungi Riparazioni{% endblock %}
 {%  block pagecontent %}
-<h1>Aggiunta Riparazione</h1>
+<br>
 <div class="superiore">
   <div class="card border-dark mb-3">
-    <h4 class="card-header">Nuova Riparazione</h4>
+    <h4 class="card-header titoli">Nuova Riparazione</h4>
     <div class="card-body text-dark">
       <form class="" action="" method="POST">
         <div class="form-group">
-          <label for="exampleFormControlTextarea1">Descrizione</label>
-          <textarea name="descrizione" class="form-control" id="exampleFormControlTextarea1" rows="3" required></textarea>
+          <label for="exampleFormControlTextarea1" class="scrittebase">Descrizione</label>
+          <textarea name="descrizione" class="form-control scrittebase" id="exampleFormControlTextarea1" rows="3" required></textarea>
         </div>
         <br>
         <div class="input-group mb-3">
           <div class="input-group-prepend">
-            <span class="input-group-text" id="basic-addon1">Prezzo</span>
+            <span class="input-group-text scrittebase" id="basic-addon1">Prezzo</span>
           </div>
-          <input name="prezzo" type="text" class="form-control" aria-label="Prezzo" aria-describedby="basic-addon1" required>
+          <input name="prezzo" type="text" class="form-control scrittebase" aria-label="Prezzo" aria-describedby="basic-addon1" required>
         </div>
         <br>
         <div class="input-group mb-3">
           <div class="input-group-prepend">
-            <label class="input-group-text" for="inputGroupSelect01">Targa</label>
+            <label class="input-group-text scrittebase" for="inputGroupSelect01">Targa</label>
           </div>
-          <select onchange="openPageRip(this);" name="targamezzo" class="custom-select" id="inputGroupSelect01" required>
+          <select onchange="openPageRip(this);" name="targamezzo" class="custom-select scrittebase" id="inputGroupSelect01" required>
             <option selected>...</option>
             {% for item in lista %}
             <option>{{item.targa}}</option>
@@ -33,12 +33,18 @@
         </div>
         <br>
         <center>
-        <input name="sub" class="btn btn-primary btn-outline-primary btn-lg" type="submit" value="Aggiungi">
+        <input name="sub" class="btn btn-primary btn-outline-primary btn-lg scrittebase" type="submit" value="Aggiungi">
         </center>
         <br>
       </form>
     </div>
   </div>
 </div>
+<center>
+{% if frase!="" %}
+<div class="card text-white bg-primary mb-3 scrittebase" style="max-width: 18rem;">
+  <div class="card-header">{{frase}}</div>
+</div>
+{%endif%}
 </center>
 {% endblock %}

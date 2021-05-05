@@ -1,0 +1,26 @@
+{% extends "template-cliente.html" %}
+{% block title%}Riparazioni{% endblock %}
+{% block pagecontent %}
+<center>
+<h1>I tuoi mezzi</h1>
+<br>
+{% if frase=="Non hai nessun Mezzo registrato" %}
+<div class="card text-white bg-danger mb-3" style="max-width: 18rem;">
+  <div class="card-header">{{frase}}</div>
+</div>
+{% endif %}
+{% for item in listamezzi %}
+<div class="superiore">
+  <div class="card border-dark mb-3">
+  <h4 class="card-header">{{item.targa}}</h4>
+  <div class="card-body text-dark">
+    <p class="card-text">Modello: {{item.marca}} {{item.modello}}</p>
+    <p class="card-text">Cilindrata: {{item.cilindrata}} cc</p>
+    <p class="card-text">Potenza: {{item.potenza}} CV</p>
+  </div>
+</div>
+</div>
+<br>
+{% endfor %}
+</center>
+{%endblock %}

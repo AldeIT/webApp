@@ -1,5 +1,5 @@
 body{
-  background-color: white;
+  background-color: #f8f9fa;
 }
 .shadowbox p{
   margin: 1px;
@@ -98,6 +98,23 @@ h4{
 
 .log{
   width: 30vw;
+}
+
+.list-group button{
+  background-color: #f8f9fa;
+}
+
+.list-group button:hover{
+  background-color: #007bff;;
+  color: white;
+}
+
+.titoli {
+  font-family: 'Roboto Mono', monospace;
+}
+
+.scrittebase {
+  font-family: 'Montserrat', sans-serif;
 }
 
 @media only screen and (max-width: 700px) and (min-width: 100px){

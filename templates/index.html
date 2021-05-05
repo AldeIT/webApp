@@ -3,12 +3,22 @@
 {% block pagecontent %}
 <center>
 <h1>Esegui l'accesso</h1>
-<form class="" action="" method="post">
-  <input type="password" name="n" value="meccanico">
-  <input type="submit" name="sub" value="Accedi">
-</form>
+<div class="log">
+  <form action="" method="post">
+    <div class="input-group mb-3">
+      <input type="password" class="form-control" name="n" aria-describedby="basic-addon2" placeholder="Password meccanico">
+      <div class="input-group-append">
+        <button class="btn btn-outline-primary" name="sub" type="submit">Accedi</button>
+      </div>
+    </div>
+  </form>
+</div>
 <br>
-<p class="error">{{frase}}</p>
+{% if frase!="" %}
+<div class="card text-white bg-danger mb-3" style="max-width: 18rem;">
+  <div class="card-header">{{frase}}</div>
+</div>
+{%endif%}
 <center>
 
 {%endblock %}
