@@ -2,13 +2,15 @@
 {% block title%}Home{% endblock %}
 {% block pagecontent %}
 <center>
-<h1>Esegui l'accesso</h1>
+  <br>
+<h1 class="titoli">Accesso</h1>
+<br>
 <div class="log">
   <form action="" method="post">
     <div class="input-group mb-3">
-      <input type="password" class="form-control" name="n" aria-describedby="basic-addon2" placeholder="Password meccanico">
+      <input type="password" class="form-control border-dark scrittebase" name="n" aria-describedby="basic-addon2" placeholder="Password meccanico">
       <div class="input-group-append">
-        <button class="btn btn-outline-primary" name="sub" type="submit">Accedi</button>
+        <button class="btn btn-outline-primary scrittebase" name="sub" type="submit">Accedi</button>
       </div>
     </div>
   </form>
@@ -16,7 +18,7 @@
 <br>
 {% if frase!="" %}
 <div class="card text-white bg-danger mb-3" style="max-width: 18rem;">
-  <div class="card-header">{{frase}}</div>
+  <div class="card-header scrittebase">{{frase}}</div>
 </div>
 {%endif%}
 <center>

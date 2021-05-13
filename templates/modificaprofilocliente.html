@@ -2,41 +2,44 @@
 {% block title%}Home{% endblock %}
 {% block pagecontent %}
 <center>
-<h1>Modifica profilo</h1>
+  <br>
+<h1 class="titoli">Modifica Profilo Personale</h1>
 <br>
 <form action="" method="post">
   <div class="container">
     <div class="row">
       <div class="col-sm">
-          <h5 class="alzati">Nome</h5>
-          <h5 class="alzati">Cognome</h5>
-          <h5 class="alzati">Codice Fiscale</h5>
-          <h5 class="alzatidai">Email</h5>
-          <h5 class="alzatidai">Numero di telefono</h5>
-          <h5 class="alzatidaidai">Password</h5>
-          <h5 class="alzatidaidai">Conferma Password</h5>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item alzati scrittebase">Nome</li>
+          <li class="list-group-item alzati scrittebase">Cognome</li>
+          <li class="list-group-item alzati scrittebase">Codice Fiscale</li>
+          <li class="alzatidai list-group-item scrittebase">Email</li>
+          <li class="alzatidai list-group-item  scrittebase">Numero di Telefono</li>
+          <li class="alzatidai list-group-item  scrittebase">Password</li>
+          <li class="alzatidai list-group-item  scrittebase">Conferma Password</li>
+        </ul>
       </div>
       <div class="col-sm">
         <ul class="list-group list-group-flush">
-          <li class="list-group-item">{{cliente.nome}}</li>
-          <li class="list-group-item">{{cliente.cognome}}</li>
-          <li class="list-group-item">{{cliente.cf}}</li>
-          <li class="list-group-item"><input id="centrati" name="email" type="email" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" value="{{cliente.email}}"></li>
-          <li class="list-group-item"><input id="centrati" name="ntelefono" type="text" class="form-control" aria-describedby="inputGroup-sizing-sm" value="{{cliente.ntelefono}}"></li>
-          <li class="list-group-item"><input id="centrati" name="password" type="password" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"></li>
-          <li class="list-group-item"><input id="centrati" name="passwordrepeat" type="password" class="form-control" aria-describedby="inputGroup-sizing-sm"></li>
+          <li class="list-group-item scrittebase">{{cliente.nome}}</li>
+          <li class="list-group-item scrittebase">{{cliente.cognome}}</li>
+          <li class="list-group-item scrittebase">{{cliente.cf}}</li>
+          <li class="list-group-item scrittebase"><input id="centrati" name="email" type="email" class="form-control scrittebase" aria-label="Small" aria-describedby="inputGroup-sizing-sm" value="{{cliente.email}}"></li>
+          <li class="list-group-item scrittebase"><input id="centrati" name="ntelefono" type="text" class="form-control scrittebase" aria-describedby="inputGroup-sizing-sm" value="{{cliente.ntelefono}}"></li>
+          <li class="list-group-item scrittebase"><input id="centrati" name="password" type="password" class="form-control scrittebase" aria-label="Small" aria-describedby="inputGroup-sizing-sm"></li>
+          <li class="list-group-item scrittebase"><input id="centrati" name="passwordrepeat" type="password" class="form-control scrittebase" aria-describedby="inputGroup-sizing-sm"></li>
         </ul>
       </div>
     </div>
   </div>
   <br>
 
-  <input name="sub" class="btn btn-primary btn-outline-primary" type="submit" value="Conferma modifiche">
+  <input name="sub" class="btn btn-primary btn-outline-primary btn-lg scrittebase" type="submit" value="Conferma modifiche">
 </form>
 <br>
 {% if frase!="" %}
 <div class="card text-white bg-danger mb-3" style="max-width: 18rem;">
-  <div class="card-header">{{frase}}</div>
+  <div class="card-header scrittebase">{{frase}}</div>
 </div>
 {%endif%}
 <br>

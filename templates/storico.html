@@ -6,42 +6,40 @@
 {% set dev2 = namespace(value=1) %}
 
 <center>
-<h1 class="titoli">Storico</h1>
+  <br>
+<h1 class="titoli">Bacheca</h1>
 <br>
 <div class="superiore">
   <form class="" action="" method="post">
     <div class="input-group">
-      <input name="ricerca" type="text" class="form-control scrittebase" placeholder="Ricerca">
+      <input name="ricerca" type="text" class="form-control scrittebase border-dark" placeholder="Ricerca">
     <div class="input-group-append">
-      <select name="scelta" class="custom-select scrittebase" id="inputGroupSelect04">
+      <select name="scelta" class="custom-select scrittebase border-dark" id="inputGroupSelect04">
         <option selected>Seleziona</option>
         <option>CF</option>
         <option>Targa</option>
       </select>
     </div>
     <div class="input-group-append">
-      <button class="btn btn-outline-primary scrittebase" type="submit">Cerca</button>
+      <button class="btn btn-outline-primary scrittebase sis" type="submit">Cerca</button>
     </div>
   </div>
   </form>
 </div>
 <br>
 <!-- print in caso di nessun record presente -->
-{% if frase=="Nessun Record Trovato" %}
-<div class="card text-white bg-danger mb-3" style="max-width: 18rem;">
-  <div class="card-header scrittebase">{{frase}}</div>
-</div>
-{%endif%}
+
 <!-- stampa delle riparazioni  -->
 {% if controllo==0%}
-<h2>Riparazioni</h2>
+<br>
+<h2 class="titoli">Riparazioni</h2>
 <br>
 {% for item in listariparazioni %}
 {% if (dev.value-1) % 3==0%}
 <div class="card-columns" style="width:90%;">
 {% endif %}
-  <div class="card text-white bg-primary mb-3" style="width: 100%; height: 18rem;">
-    <div class="card-header bg-primary titoli">Riparazione</div>
+  <div class="card border-dark text-black bg-white mb-3 ombradialde" style="width: 100%; height: 19rem;">
+    <div class="card-header bg-primary text-white titoli"><b>Riparazione</b></div>
     <div class="card-body bg-white">
       <h5 class="card-title scrittebase">{{item.descrizione}}</h5>
       <p class="card-text scrittebase">Inizio: {{item.inizio[0:16]}}</p>
@@ -52,19 +50,22 @@
   </div>
 {% if dev.value % 3==0 and dev.value!=0 or item==listariparazioni[-1]%}
 </div>
+<br>
 {% endif %}
 {% set dev.value = dev.value + 1 %}
 {% endfor %}
 <br>
+<br>
 <!-- print dei mezzi -->
-<h2>Mezzi</h2>
+<h2 class="titoli">Mezzi</h2>
+<br>
 {% for item in listamezzi %}
 {% if (dev1.value-1) % 3==0%}
 <div class="card-columns" style="width:90%;">
 {% endif %}
-  <div class="card text-white bg-primary mb-3" style="width: 100%; height: 19rem">
-    <div class="card-header titoli">Mezzo</div>
-    <div class="card-body">
+  <div class="card border-dark text-black bg-white mb-3 ombradialde" style="width: 100%; height: 20rem">
+    <div class="card-header bg-primary text-white titoli">Mezzo</div>
+    <div class="card-body bg-white">
       <h5 class="card-title scrittebase">{{item.targa}}</h5>
       <p class="card-text scrittebase">Marca: {{item.marca}}</p>
       <p class="card-text scrittebase">Modello: {{item.modello}}</p>
@@ -75,19 +76,22 @@
   </div>
 {% if dev1.value % 3==0 and dev1.value!=0 or item==listamezzi[-1]%}
 </div>
+<br>
 {% endif %}
 {% set dev1.value = dev1.value + 1 %}
 {% endfor %}
 <br>
+<br>
 <!-- print dei clienti -->
-<h2>Clienti</h2>
+<h2 class="titoli">Clienti</h2>
+<br>
 {% for item in listaclienti %}
 {% if (dev2.value-1) % 3==0%}
 <div class="card-columns" style="width:90%;">
 {% endif %}
-  <div class="card text-white bg-primary mb-3" style="width: 100%; height: 18rem">
-    <div class="card-header titoli">Cliente</div>
-    <div class="card-body">
+  <div class="card border-dark text-black bg-white mb-3 ombradialde" style="width: 100%; height: 19rem">
+    <div class="card-header bg-primary text-white titoli">Cliente</div>
+    <div class="card-body br-white">
       <h5 class="card-title scrittebase">{{item.cf}}</h5>
       <p class="card-text scrittebase">Nome: {{item.nome}}</p>
       <p class="card-text scrittebase">Cognome: {{item.cognome}}</p>
@@ -97,24 +101,26 @@
   </div>
 {% if dev2.value % 3==0 and dev2.value!=0 or item==listaclienti[-1]%}
 </div>
+<br>
 {% endif %}
 {% set dev2.value = dev2.value + 1 %}
 {% endfor %}
 <br>
 <!-- print in caso di no record -->
-{% if frase=="Nessun Record Trovato" %}
-<div class="card text-white bg-danger mb-3" style="max-width: 18rem;">
+{% if frase!="" %}
+<div class="card text-white bg-danger mb-3" style="max-width: 19rem;">
   <div class="card-header scrittebase">{{frase}}</div>
 </div>
 {%endif%}
 
 <!-- ricerca in base al cv -->
 {% elif controllo==1 %}
+<br>
 {% set dev3 = namespace(value=1) %}
 <div class="card-columns" style="width:90%;">
 {% for item in listariparazioni %}
-  <div class="card text-white bg-primary mb-3" style="width: 100%; height: 19rem;">
-    <div class="card-header titoli">Riparazione</div>
+  <div class="card border-dark text-black bg-white mb-3 ombradialde" style="width: 100%; height: 20rem;">
+    <div class="card-header bg-primary text-white titoli">Riparazione</div>
     <div class="card-body">
       <h5 class="card-title scrittebase">{{item.descrizione}}</h5>
       <p class="card-text scrittebase">Inizio: {{item.inizio[0:16]}}</p>
@@ -126,6 +132,7 @@
 <br>
 {% if dev3.value % 3==0 and dev3.value!=0%}
 </div>
+<br>
 <div class="card-columns" style="width:90%;">
 {%endif%}
 {% set dev3.value = dev3.value + 1 %}
@@ -134,10 +141,11 @@
 {% for item in listamacchine %}
 {% if dev3.value % 3==0 and dev3.value!=0%}
 </div>
+<br>
 <div class="card-columns" style="width:90%;">
 {%endif%}
-  <div class="card text-white bg-primary mb-3" style="width: 100%; height: 19rem">
-    <div class="card-header titoli">Mezzo</div>
+  <div class="card border-dark text-black bg-white mb-3 ombradialde" style="width: 100%; height: 20rem">
+    <div class="card-header bg-primary text-white titoli">Mezzo</div>
     <div class="card-body">
       <h5 class="card-title scrittebase">{{item.targa}}</h5>
       <p class="card-text scrittebase">Marca: {{item.marca}}</p>
@@ -150,23 +158,27 @@
 <br>
 {% if item==listamacchine[-1]%}
 </div>
+<br>
 {% endif %}
 {% set dev3.value = dev3.value + 1 %}
 {% endfor %}
 <!-- print in caso di no record -->
 {% if frase=="Nessun Record Trovato" %}
-<div class="card text-white bg-danger mb-3" style="max-width: 18rem;">
+</div>
+<div class="card text-white bg-danger mb-3" style="max-width: 19rem;">
   <div class="card-header scrittebase">{{frase}}</div>
 </div>
+<br>
 {%endif%}
 
 <!-- ricerca in base alla targa -->
 {%elif controllo==2%}
+<br>
 {% set dev4= namespace(value=1) %}
 <div class="card-columns" style="width:90%;">
 {% for item in listariparazioni %}
-  <div class="card text-white bg-primary mb-3" style="width: 100%; height: 18rem;">
-    <div class="card-header titoli">Riparazione</div>
+  <div class="card border-dark text-black bg-white mb-3 ombradialde" style="width: 100%; height: 19rem;">
+    <div class="card-header bg-primary text-white titoli">Riparazione</div>
     <div class="card-body">
       <h5 class="card-title scrittebase">{{item.descrizione}}</h5>
       <p class="card-text scrittebase">Inizio: {{item.inizio[0:16]}}</p>
@@ -178,6 +190,7 @@
 <br>
 {% if dev4.value % 3==0 and dev4.value!=0%}
 </div>
+<br>
 <div class="card-columns" style="width:90%;">
 {%endif%}
 {% set dev4.value = dev4.value + 1 %}
@@ -188,8 +201,8 @@
 </div>
 <div class="card-columns" style="width:90%;">
 {%endif%}
-  <div class="card text-white bg-primary mb-3" style="width: 100%; height: 18rem">
-    <div class="card-header titoli">Cliente</div>
+  <div class="card border-dark text-black bg-white mb-3 ombradialde" style="width: 100%; height: 19rem">
+    <div class="card-header bg-primary text-white titoli">Cliente</div>
     <div class="card-body">
       <h5 class="card-title scrittebase">{{item.cf}}</h5>
       <p class="card-text scrittebase">Nome: {{item.nome}}</p>
@@ -201,12 +214,14 @@
 <br>
 {% if item==listaproprietari[-1]%}
 </div>
+<br>
 {% endif %}
 {% set dev4.value = dev4.value + 1 %}
 {% endfor %}
 <!-- print in caso di no record -->
 {% if frase=="Nessun Record Trovato" %}
-<div class="card text-white bg-danger mb-3" style="max-width: 18rem;">
+</div>
+<div class="card text-white bg-danger mb-3" style="max-width: 19rem;">
   <div class="card-header scrittebase">{{frase}}</div>
 </div>
 {%endif%}
