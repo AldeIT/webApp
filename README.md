@@ -2,18 +2,6 @@
 <img src="images/logo.png" width="200">
 
 ## Index
-- [English](#English)
-  - [Project Status](#project-status)
-  - [Description](#description)
-  - [Documentation](#documentaion)
-  - [Technlogies](#technologie)
-  - [Lenguages](#lenguages)
-  - [Architecture](#architecture)
-  - [Functionality](#functionality)
-  - [Project Structure](#project-structure)
-  - [Licence](#licence)
-  
-- [Italiano](#Italiano)
   - [Status del progetto](#status-del-progetto)
   - [Descrizione](#descrizione)
   - [Documentazione](#documentazione)
@@ -21,58 +9,16 @@
   - [Linguaggi](#linguaggi)
   - [Architettura](#architettura)
   - [Funzionalità](#funzionalità-della-piattaforma)
-  - [Struttura del progetto](#struttura-del-progetto)
-  - [Licenze](#licenze)
+  - [Licenze](#licenza)
 
-## English <img src="images/eng.png"  height="25">
-
-## Project Status
-...
-
-## Description
-
-MechSite is...
-
-## Documentation
-* Readme.md file
-* Gantt chart
-* RACI table
-* 
-
-## Technologies
-* [Flask](https://flask.palletsprojects.com/en/1.1.x): Version 1.?
-* [Bootstrap](https://getbootstrap.com): Version 5.0
-* [SQLAlchemy](https://www.sqlalchemy.org): Version 1.4
-* [Git](https://git-scm.com): Version 2.31.1
-
-## Lenguages
-* [Python](https://www.python.org): Version 3.8.6
-* [Html](https://html.com): Version 5
-* [CSS](https://www.css.com): Version 3
-* [JavaScript](https://www.javascript.com): Version ECMAScript 2018
-
-## Architecture
-
-(Linode)
-
-## Functionality
-...
-
-## Project structure
-(repo)
-
-## Licenza
-
-<br><br><br>
-
-## Italiano <img src="images/ita.png" height="25">
+## Italiano
 
 ## Status del progetto
 In fase di completamento
 
 ## Descrizione
 MechSite è una piattaforma sviluppata per la semplificazione del lavoro e della gestione di un'Officina Meccanica.
-MechSite è stata sviluppata da Aldegheri Alessandro, Cremonini Davide, Liuzzi Lorenzo e Venturi Davide.
+Sviluppo a cura di Aldegheri Alessandro, Cremonini Davide, Liuzzi Lorenzo e Venturi Davide.
 
 ## Documentazione
 
