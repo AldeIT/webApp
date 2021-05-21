@@ -71,15 +71,14 @@ MechSite is...
 In fase di completamento
 
 ## Descrizione
-MechSite è una piattaforma sviluppata per l'ausilio del meccanico, il quale avrà una semplificazione nella gestione del lavoro e dell'organizzazione.
-La piattaforma permette inoltre di faar visualizzare a quet'ultimo una sezione denominata "Bacheca" la quale permetterà la visualizzazione delle riparazioni effettuate in precedenza, provviste di Nome cliente, Targa del mezzo e data di quando è stata effettuata.
+MechSite è una piattaforma sviluppata per la semplificazione del lavoro e della gestione di un'Officina Meccanica.
+MechSite è stata sviluppata da Aldegheri Alessandro, Cremonini Davide, Liuzzi Lorenzo e Venturi Davide.
 
 ## Documentazione
 
-* File Readme.md
-* Diagramma di Gantt
-* Tabella RACI
-* 
+* [Diagramma di Gantt](https://drive.google.com/file/d/1BeVnqbh5HKW09XOT5dUjtl3Uy1bokWgN/view?usp=sharing)
+* [Tabella RACI](https://docs.google.com/spreadsheets/d/1kEPLzwxoObNCef1DimVPtG-wvmlK6mBi6TJlE5SkUkk/edit?usp=sharing)
+* [Work BreakDown Structure](https://drive.google.com/file/d/1zb6he1vLRaxeQFNN8-heSKB_FlnQ6TEn/view?usp=sharing)
 
 ## Tecnologie
 
@@ -97,7 +96,10 @@ La piattaforma permette inoltre di faar visualizzare a quet'ultimo una sezione d
 
 ## Architettura
 
-(Qui si parla della macchina Linode)
+Per la pubblicazione della piattaforma abbiamo optato per l'utilizzo del servizio di Hosting [Linode](https://www.linode.com/). Tramite un Link d'invito abbiamo potuto usufruire di due mesi di utilizzo gratuito. Successivamente, abbiamo configurato una macchina Ubuntu (20.10) dotata di 2 CPUs, 4 GB Ram, 80 GB Storage.
+Tutta la configurazione è stata effettuata tramite l'utilizzo del software Putty e il protocollo SSH.
+
+<img src="images/linode.jpg" width="700">
 
 ## Funzionalità della piattaforma
 
@@ -112,8 +114,8 @@ All'interno della parte amministrativa saranno disponibili le seguenti funzional
 * Aggiunta nuovi mezzi
 * Aggiunta nuovi interventi
 * Visualizzazione di una bacheca che contiene tutti i clienti, i mezzi e gli interventi
-* Visualizzazione di una pagina che contiene tutte gli inteventi in corso nel quale è possibile terminare gli interventi
-* Possibilità di modificare i dati relativi ai clienti, ai mezzi e agli interventi
+* Visualizzazione di una pagina che contiene tutte gli inteventi in corso nella quale è possibile terminare gli interventi attivi
+* Possibilità di modifica e eliminazione dei dati relativi ai clienti, ai mezzi e agli interventi
 
 #### Aggunta nuovi clienti
 All'arrivo di un nuovo cliente l'amministratore potrà utilizzare i dati forniti da quest'ultimo per poterlo inserire all'interno del database.
@@ -121,33 +123,32 @@ All'arrivo di un nuovo cliente l'amministratore potrà utilizzare i dati forniti
 <img src="images/aggiunta-cliente.jpeg" width="700">
 
 #### Aggiunta nuovi mezzi
-Per l'aggiunta di un nuovo mezzo all'interno del database sarà necessario specificare oltre alle informazioni del mezzo inserire anche il codice fiscale del proprietario del mezzo.
-Il codice fiscale a differenza degli altri dati non sarà da inserire scrivendolo, ma sarà selezionabile da una lista di codici fiscali già esistenti.
+Per l'aggiunta di un nuovo mezzo all'interno del database sarà necessario specificare oltre alle informazioni del mezzo anche il codice fiscale del proprietario.
+Il codice fiscale a differenza degli altri dati non sarà da inserire manualmente, ma sarà selezionabile da una lista di codici fiscali già esistenti.
 Se il codice fiscale del proprietario non fosse presente sarà possibile selezionare la voce apposita che reindirizzerà alla sezione dedicata per aggiungerlo.
 
 <img src="images/nuovo-cliente.gif" width="700">
 
 #### Aggiunta nuovi interventi
-Per l'aggiunta di un nuovo intervento sarà necessario specificare oltre alle informazioni dell'intervento anche la targa del mezzo su cui dovrà essere effettuato l'intervento.
-
-Anche in questo caso, la targa del mezzo, a differenza degli altri dati non sarà da inserire scrivendola, ma sarà selezionabile da una lista di targhe già esistenti.
+Per l'aggiunta di un nuovo intervento sarà necessario specificare oltre alle informazioni dell'intervento anche la targa del mezzo collegata ad esso.
+Anche in questo caso, la targa del mezzo, a differenza degli altri dati non sarà da inserire manualmente, ma sarà selezionabile da una lista di targhe già esistenti.
 Se la targa del mezzo non fosse presente sarà possibile selezionare la voce apposita che reindirizzerà alla sezione dedicata per aggiungerla.
 
 
 #### Visualizzazione di una bacheca che contiene tutti i clienti, i mezzi e gli interventi
-Al personale amministrativo sarà possibile visualizzare in un unica pagina tutti i clienti, i mezzi e gli interventi registrati.
-Sarà anche possibile una ricerca di elementi tramite il codice fiscale del proprietario o tramite la targa di un mezzo, e verranno mostrati tutti i veicoli e le riparazioni di quel codice fiscale, oppure se viene ricercato un veicolo verranno mostrati il proprietario e le riparazioni in corso su esso e anche quelle già terminate.
+Per il personale amministrativo sarà possibile visualizzare in un unica pagina tutti i clienti, i mezzi e gli interventi registrati.
+Sarà anche possibile una ricerca specifica tramite l'inserimento di un codice fiscale o di una targa. 
 
 <img src="images/cerca-cf.gif" width="700">
 
-#### Visualizzazione di una pagina che contiene tutte gli inteventi in corso nel quale è possibile terminare gli interventi
-In questa sezione verranno visualizzati tutti gli interventi in corso e sarà possibile terminare un intervento facendo si che il cliente venga informato di ciò tramite un email.
-La pagina presenta una lista di interventi e aprendone uno sarà possibile decidere di terminarlo.
+#### Visualizzazione di una pagina che contiene tutte gli inteventi attivi
+In questa sezione verranno visualizzati tutti gli interventi attivi e sarà possibile terminarli. Al momento della conclusione verrà inviata una mail di avviso al proprietario del mezzo interessato.
+La pagina si presenta come una lista, dalla quale sarà possibile selezionare un intervento specifico per visualizzare più informazioni o terminarlo.
 
 <img src="images/termina-rip.gif" width="700">
 
 #### Possibilità di modificare i dati relativi ai clienti, ai mezzi e agli interventi
-Il personale amministrativo potrà anche modificare i dati relativi ai clienti, a mezzi e agli interventi che sono già stati inseriti e quindi che sono già presenti.
+Il personale amministrativo potrà anche modificare i dati relativi ai clienti, ai mezzi e agli interventi già presenti nel database.
 Queste operazioni saranno disponibili nella pagina gestionale.
 
 <img src="images/modifica-rip.gif" width="700">
@@ -155,18 +156,15 @@ Queste operazioni saranno disponibili nella pagina gestionale.
 ### Lato Cliente
 
 All'interno della parte dedicata al cliente le funzionalità saranno diverse.
-Esse saranno limitate al visualizzare le proprie riparazioni e i propri mezzi e alla modifica dei propri dati personali con i quali si esegue l'accesso alla piattaforma.
+Esse saranno limitate alla visualizzazione degli interventi collegati ad esso, dei mezzi a lui appartenenti e alla modifica dei propri dati personali con i quali è possibile effettuare l'accesso alla piattaforma.
 
-Al primo accesso alla piattaforma utilizzando la mail fornita in precedenza al personale dell'officina sarà richiesto la creazione e l'inserimento di una password che sarà utilizzata poi per tutti gli accessi seguenti.
+Al primo accesso, utilizzando la mail fornita in precedenza al personale dell'officina, sarà richiesta la creazione e l'inserimento di una password che sarà utilizzata poi per tutti gli accessi successivi.
 
 <img src="images/primo-accesso.gif" width="700">
 
-Questa password sarà poi modificabie all'interno dell'area dedicata alla modifica del profilo, dove saranno modificabili dall'utente anche i contatti email e numero di telefono.
+Questa password sarà poi modificabie all'interno dell'area dedicata alla modifica del profilo, dove saranno modificabili inoltre  i contatti email e numero di telefono.
 
 <img src="images/modifica-mail.gif" width="700">
-
-## Struttura del progetto
-(Qui va presentata la struttura delle repository nelle quali si trovano i sorgenti del progetto, le immagini, le gif, il readme ecc..)
 
 ## Licenza
 
@@ -174,7 +172,7 @@ Questa password sarà poi modificabie all'interno dell'area dedicata alla modifi
 MIT License
 
 ### Autori e copyright
-| Autori(in ordine alfabetico)  | Contatto di posta elettronica |
+| Autori  | Contatto di posta elettronica |
 | ------------- | ------------- |
 | Aldegheri Alessandro  | 18134@studenti.marconiverona.edu.it |
 | Cremonini Davide  | 18213@studenti.marconiverona.edu.it |
