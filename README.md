@@ -99,7 +99,7 @@ MechSite è stata sviluppata da Aldegheri Alessandro, Cremonini Davide, Liuzzi L
 Per la pubblicazione della piattaforma abbiamo optato per l'utilizzo del servizio di Hosting [Linode](https://www.linode.com/). Tramite un Link d'invito abbiamo potuto usufruire di due mesi di utilizzo gratuito. Successivamente, abbiamo configurato una macchina Ubuntu (20.10) dotata di 2 CPUs, 4 GB Ram, 80 GB Storage.
 Tutta la configurazione è stata effettuata tramite l'utilizzo del software Putty e il protocollo SSH.
 
-<img src="images/linode.jpg" width="700">
+<img src="images/linode.JPG" width="700">
 
 ## Funzionalità della piattaforma
 
