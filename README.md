@@ -28,7 +28,7 @@ Sviluppo a cura di Aldegheri Alessandro, Cremonini Davide, Liuzzi Lorenzo e Vent
 
 ## Tecnologie
 
-* [Flask](https://flask.palletsprojects.com/en/1.1.x): Version 1.?
+* [Flask](https://flask.palletsprojects.com/en/1.1.x): Version 1.1.2
 * [Bootstrap](https://getbootstrap.com): Version 5.0
 * [SQLAlchemy](https://www.sqlalchemy.org): Version 1.4
 * [Git](https://git-scm.com): Version 2.31.1
