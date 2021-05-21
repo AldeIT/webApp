@@ -60,7 +60,7 @@ All'interno della parte amministrativa saranno disponibili le seguenti funzional
 * Aggiunta nuovi mezzi
 * Aggiunta nuovi interventi
 * Visualizzazione di una bacheca che contiene tutti i clienti, i mezzi e gli interventi
-* Visualizzazione di una pagina che contiene tutte gli inteventi in corso nella quale è possibile terminare gli interventi attivi
+* Visualizzazione di una pagina che contiene tutte gli interventi in corso nella quale è possibile terminare gli interventi attivi
 * Possibilità di modifica e eliminazione dei dati relativi ai clienti, ai mezzi e agli interventi
 
 #### Aggunta nuovi clienti
@@ -87,7 +87,7 @@ Sarà anche possibile una ricerca specifica tramite l'inserimento di un codice f
 
 <img src="images/cerca-cf.gif" width="700">
 
-#### Visualizzazione di una pagina che contiene tutte gli inteventi attivi
+#### Visualizzazione di una pagina che contiene tutte gli interventi attivi
 In questa sezione verranno visualizzati tutti gli interventi attivi e sarà possibile terminarli. Al momento della conclusione verrà inviata una mail di avviso al proprietario del mezzo interessato.
 La pagina si presenta come una lista, dalla quale sarà possibile selezionare un intervento specifico per visualizzare più informazioni o terminarlo.
 
