@@ -14,7 +14,7 @@
 ## Italiano
 
 ## Status del progetto
-In fase di completamento
+Completato
 
 ## Descrizione
 MechSite è una piattaforma sviluppata per la semplificazione del lavoro e della gestione di un'Officina Meccanica.
